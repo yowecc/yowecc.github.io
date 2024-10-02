@@ -5421,7 +5421,7 @@ table, th, td {
     grid-template-columns: 100%;
   }
   .list-blog.bs-blog-post .bs-blog-thumb {
-    height: 400px;
+    height: 300px;
     margin-bottom: 30px;
   }
   .multi-post-widget .inner_columns {
@@ -5776,6 +5776,12 @@ table, th, td {
   }
   .page-entry-title {
     flex-direction: column;
+  }
+  .bs-slide.bs-blog-post.three.lg {
+    height: 300px;
+  }
+  .bs-slide .inner .title {
+    font-size: 27px;
   }
 }
 /*---------media_query-----*/
