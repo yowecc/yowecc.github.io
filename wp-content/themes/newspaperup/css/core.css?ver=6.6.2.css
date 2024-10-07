@@ -2103,6 +2103,10 @@ footer.one .bs-footer-copyright {
   letter-spacing: 1.5px;
 }
 
+.align_cls:has(.list-blog) {
+  row-gap: 50px;
+}
+
 /* ------------blog-right-sidebar------------*/
 #content {
   padding: 40px 0;
@@ -2424,8 +2428,7 @@ footer.one .bs-footer-copyright {
 .list-blog.bs-blog-post {
   display: grid;
   grid-template-columns: 350px 1fr;
-  -moz-column-gap: 2rem;
-       column-gap: 2rem;
+  gap: 2rem;
   text-align: start;
   padding: 0;
   align-items: center;
@@ -2473,6 +2476,10 @@ footer.one .bs-footer-copyright {
 .list-blog.right .bs-blog-thumb {
   margin-left: 15px;
   margin-right: unset;
+}
+.list-blog .bs-post-thumb img {
+  height: auto;
+  max-width: 100%;
 }
 
 /*----- List small-post-widget -----*/
@@ -4308,7 +4315,6 @@ textarea#comment {
 -----------------------------------------*/
 .multi-post-widget .bs-blog-post.three.bsm {
   height: 233.5px;
-  background: #333;
 }
 .multi-post-widget .bs-blog-post.three.bsm .title {
   font-size: 20px;
@@ -4525,6 +4531,7 @@ footer.one .bs-footer-copyright .info-right {
   gap: 15px;
   flex-wrap: wrap;
   margin-bottom: 0;
+  padding: 0;
 }
 footer.one .bs-footer-copyright p {
   margin-bottom: 0;
@@ -5422,7 +5429,6 @@ table, th, td {
   }
   .list-blog.bs-blog-post .bs-blog-thumb {
     height: 300px;
-    margin-bottom: 30px;
   }
   .multi-post-widget .inner_columns {
     grid-template-columns: auto;

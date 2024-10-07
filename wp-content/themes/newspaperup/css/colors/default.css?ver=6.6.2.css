@@ -175,6 +175,9 @@ a:focus, button:focus {
 .bs-headsix .header-sticky .navbar-wp nav li a .sub-arrow{
 	border-color: var(--head-color) transparent transparent transparent;
 }
+.multi-post-widget .bs-blog-post.three.bsm{
+	background-color: #333;
+}
 /*==================== topbar ====================*/
 .switch .slider::before,.switch .dark + .slider::after{
 	background-color: #fff;
