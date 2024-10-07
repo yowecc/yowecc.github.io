@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?><?xml-stylesheet type='text/xsl' href='http://yowe.cc/wp-content/plugins/google-sitemap-generator/sitemap.xsl'?><!-- sitemap-generator-url='http://www.arnebrachhold.de' sitemap-generator-version='4.1.21' -->
-<!-- generated-on='2024年10月7日 am4:34' -->
+<!-- generated-on='2024年10月7日 am8:59' -->
 <urlset xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>	<url>
 		<loc>http://yowe.cc/erp%e5%ae%8c%e5%85%a8%e5%bc%80%e6%ba%90%ef%bc%81%e9%80%82%e5%90%88%e4%b8%ad%e5%b0%8f%e4%bc%81%e4%b8%9a%e7%9a%84%e5%bc%80%e6%ba%90erp%e7%b3%bb%e7%bb%9f/</loc>
 		<lastmod>2024-09-30T12:18:09+00:00</lastmod>
@@ -78,4 +78,4 @@
 		<changefreq>monthly</changefreq>
 		<priority>0.6</priority>
 	</url>
-</urlset><!-- Request ID: d30e8f6787fb8d4554eb2730fa60664f; Queries for sitemap: 3; Total queries: 19; Seconds: 0; Memory for sitemap: 1KB; Total memory: 6MB -->
+</urlset><!-- Request ID: 281012360338b46c3e488ca986907cf0; Queries for sitemap: 3; Total queries: 19; Seconds: 0.29; Memory for sitemap: 1KB; Total memory: 6MB -->
