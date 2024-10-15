@@ -1,0 +1,420 @@
+document.addEventListener('alpine:init', () => {
+
+    Alpine.bind('extendLogin', () => ({
+        '@click'() {
+            this.extLoginType = 'login';
+            this.error = {};
+            this.popInit({
+                title  : this.loginTitle,
+                content : this.$refs.loginformtpl.innerHTML,
+                mWidth:'350px',
+            }); 
+        },
+        'x-init'() {
+            if( !this.cookieloginData ){ 
+                this.error = {};
+                this.cookieloginData = true;
+                this.fetchApiLoad    = 0;
+                const loginData = Cookies.get('loginData'); 
+                if( loginData ){
+                    const _logindata = JSON.parse(loginData);
+                    let loginContent = `
+                    <div x-data='${loginData}'>
+                        <div class="loginform px-3 fs-7 py-2">
+                            <form class="loginpassform-wrap" x-bind="extendLoginsubmit">
+                                <div class="mb-3 position-relative">
+                                    <label for="usercode" class="form-label" x-text="form.username"></label>
+                                    <input type="text" class="form-control fs-7 lh-base" :class="{'is-invalid':error.usercode}" @click="error.usercode = false" id="usercode" x-model="formdata.usercode" autocomplete="off" :placeholder="form.placeholder">
+                                    <div class="invalid-feedback" x-text="form.errorcode"></div> 
+                                </div>
+                                <div class="mb-4 position-relative"> 
+                                    <label for="verifycode" class="form-label" x-text="form.verifyinput"></label>
+                                    <input type="text" class="form-control fs-7 lh-base" :class="{'is-invalid':error.verifycode}" style="background-image: none" @click="error.verifycode = false" x-model="formdata.verifycode" id="verifycode" :placeholder="form.vcplaceholder" autocomplete="off">
+                                    <div class="invalid-feedback" x-text="form.errorverify"></div> 
+                                    <button type="button" class="sendcodebtn fs-6" @click="sendCode.sendVerify(formdata.usercode,'sendVerify',$data)" x-text="sendCode.sendInit(form.verifybtn)"></button>
+                                </div>
+                                <div class="mb-3">
+                                    <button class="btn w-100 btn-default anim boxshow fs-7 btn-lg" type="submit" x-html="formloadbtn(form.loginbtn,'${_logindata.form.loginSuccess}')"></button>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="tip fs-6 text-center opacity-50 pt-2" x-show="form.popdesc" x-text="form.popdesc"></div>
+                    </div>
+                    `;
+                    this.popData.callback  = () => {
+                        Cookies.remove('loginData');
+                    };
+                    this.popInit({
+                        title  : _logindata.form.poptitle,
+                        content : loginContent,
+                        mWidth:'350px',
+                    }); 
+                }
+            }          
+            
+        }
+    }));
+    Alpine.bind('extendOpenLoginBtn', () => ({
+        ':href'(){
+            return cxjs.ajaxurl+'?action='+this.openloginType+'&redirect='+encodeURIComponent(window.location.href);
+        }
+    }));
+
+    Alpine.bind('unuserbindlogin', () => ({        
+        '@click'() {
+            this.fetchApiLoad = 0;
+            this.popInit({
+                title  : this.form.title,
+                content : `
+                    <p class="fs-7">${this.form.desc}</p>
+                    <div class="text-center"><button class="btn btn-default anim boxshow fs-7 btn-lg w-50 rounded-pill" type="button" @click='xhapiremote("unbinduser",${JSON.stringify( this.formdata )})'>${this.form.btnname}</div>
+                `,
+                mWidth:'300px',
+                startThis : this,
+            });
+        }
+    }));
+
+    Alpine.bind('userbindwxlogin', () => ({
+        '@click'() {
+            this.fetchApiLoad  = 0;
+            if( !this.wxloginqrcode ){
+                this.wxloginqrcode = false;
+            }            
+            this.popInit({
+                title  : this.form.title,
+                content : `
+                    <div class="logintemplate" x-data="extendLoginData()" x-init="initLoginForm('${this.form.loginType}')">
+                        <div class="position-relative z-1">                  
+                            <div class="loginform px-3 fs-7 py-3 mt-3" :class="{loading:loginformLoad}" x-ref="loginformwrap" x-init="if( !wxloginqrcode ){loginApiform('${this.form.loginType}');wxloginqrcode = true}" style="min-height:200px;"></div>            
+                            <div class="tip fs-6 text-center opacity-50 pt-2">${this.form.desc}</div>
+                        </div>                
+                    </div>
+                `,
+                mWidth:'350px',
+                startThis : this,
+            });
+        },
+    }));
+
+    Alpine.bind('extendLoginsubmit', () => ({
+        '@submit.prevent'() {
+            if( this.fetchApiLoad ) return false;
+            const Data = this.formdata;
+            let formsubmit = true;
+            for (let key in Data) {
+                switch (key) {
+                    case 'username':
+                        const verifyType = this.validity.username(Data[key]);
+                        if( verifyType == 'invalid' ){
+                            this.error.username = true;
+                            formsubmit = false;
+                            return;
+                        }
+                    break;case 'password':
+                        // 添加密码验证
+                        const passwordLengthRegex = /^.{6,20}$/;
+                        if( ! passwordLengthRegex.test(Data[key]) ){
+                            this.error.password = true;
+                            formsubmit = false;
+                            return;
+                        }
+                    break;case 'usercode':
+                        const usercode = this.validity.username(Data[key]);
+                        if( usercode == 'invalid' || usercode == 'username' ){
+                            this.error.usercode = true;
+                            formsubmit = false;
+                            return;
+                        }
+                    break;case 'verifycode':
+                        // 判断4-6位数字
+                        const verifycodeRegex = /^[0-9]{4,6}$/;
+                        if( ! verifycodeRegex.test(Data[key]) ){
+                            this.error.verifycode = true;
+                            formsubmit = false;
+                            return;
+                        }
+                    break;case 'nickname':
+                        // 添加昵称验证
+                        const nicknameRegex = /^.{2,10}$/;
+                        if( ! nicknameRegex.test(Data[key]) ){
+                            this.error.nickname = true;
+                            formsubmit = false;
+                            return;
+                        }
+                    break;case 'password2':
+                        // 判断两次密码是否一致
+                        if( Data[key] != Data.password ){
+                            this.error.password2 = true;
+                            formsubmit = false;
+                            return;
+                        }
+                    break;case 'compute':
+                        // 判断1-4位数字
+                        const computeRegex = /^[0-9]{1,4}$/;
+                        if( ! computeRegex.test(Data[key]) ){
+                            this.error.compute = true;
+                            formsubmit = false;
+                            return;
+                        }
+                    break;
+                }
+            } 
+            
+            // 开始提交表单
+            if(formsubmit){
+                this.fetchApiLoad = 1;
+                this.fetchApi( Data.restapi, {
+                    _this : this,
+                    calldata : true,
+                    method: 'POST',
+                    timeout : 500,
+                    retfill : true,
+                    data: Data,
+                    callback : (retData, _this) => {
+                        if( retData.code == 5 ){
+                            _this.apiloadkes = '574050';
+                            _this.fetchApiLoad = 0;
+                            if( retData.retType == 'lostpass'){
+                                _this.popInit({
+                                    title  : _this.popData.title,
+                                    content : retData.data.content,
+                                    mWidth:'350px',
+                                    startThis : _this,
+                                });
+                            }else{
+                                _this.popInit({
+                                    title  : retData.data.title,
+                                    content : retData.data.content,
+                                    mWidth:'400px',
+                                    startThis : _this,
+                                });
+                            } 
+                        }else{
+                            _this.fetchApiLoad = 2;
+                            location.reload();
+                        }
+                    }
+                });      
+            }
+        }
+    }));
+
+    Alpine.bind('extendRegister', () => ({
+        '@click'() {
+            this.extLoginType = 'register';
+            this.error = {};
+            this.popLoading();
+            this.fetchApi('registerform', {
+                _this : this,
+                calldata : true,
+                method: 'POST',
+                timeout : 500,
+                retfill : false,
+                data: {
+                    type : 'pc',
+                },
+                callback : (retData, _this) => {
+                    this.popInit({
+                        title  : retData.title,
+                        content : retData.html,
+                        mWidth:'350px'
+                    });
+                }
+            }); 
+        }
+    }));
+
+    Alpine.bind('bindemailform', () => ({
+        '@submit.prevent'() {
+            const verifyRegex = /^\d{4,6}$/;
+            if( !verifyRegex.test(this.formdata.verifycode) ){
+                this.error.verifycode = true;
+                return;
+            }else{
+                this.fetchApi('userregister', {
+                    _this : this,
+                    calldata : true,
+                    method: 'POST',
+                    timeout : 500,
+                    retfill : false,
+                    data: this.formdata,
+                    callback : (retData, _this) => {
+                        _this.fetchApiLoad = 2;
+                        location.reload();
+                    }
+                });    
+            }
+        }
+    }));
+
+    Alpine.bind('extendLostpassword', () => ({
+        '@click'() {
+            this.extLoginType = 'lostpassword';
+            this.error = {};
+            this.popLoading();
+            this.fetchApi('lostpassform', {
+                _this : this,
+                calldata : true,
+                method: 'POST',
+                timeout : 500,
+                retfill : false,
+                data: {
+                    type : 'pop',
+                },
+                callback : (retData, _this) => {
+                    this.popInit({
+                        title  : retData.title,
+                        content : retData.html,
+                        mWidth:'350px'
+                    });
+                }
+            }); 
+        }
+    }));
+
+    Alpine.data('extendLoginData', () => ({
+        // 正文
+        extLoginType : '',
+        loginHtml : {}, 
+        loginformLoad : false, 
+        openloginShow : true,
+        // api请求
+        loginApiform(Type){
+            this.loginformLoad = true;
+            // 请求表单
+            this.fetchApi('loginform', {
+                _this : this,
+                calldata : true,
+                method: 'POST',
+                timeout : 500,
+                retfill : false,
+                data: { 
+                    type : Type
+                },
+                callback : (retData, _this) => {
+                    _this.extLoginType = Type;
+                    _this.$refs.loginformwrap.innerHTML = retData.html;
+                    _this.loginHtml[Type] = _this.$refs.loginformwrap.innerHTML;
+                    _this.loginformLoad = false; 
+                }
+            });
+        },
+        initLoginForm(Type){
+            this.extLoginType    = Type;
+            this.loginHtml[Type] = this.$refs.loginformwrap.innerHTML;
+        },
+        switchLoginType(Type){
+            this.fetchApiLoad = 0;
+            if (Type in this.loginHtml) {
+                this.extLoginType = Type;
+                this.$refs.loginformwrap.innerHTML = this.loginHtml[Type];
+            }else{
+                this.loginApiform(Type);
+            }              
+        },
+        randomKeywords(){
+            const loginWords = this.form.keywords;
+            const randloginWords = Math.floor(Math.random() * loginWords.length);
+            return loginWords[randloginWords];            
+        },
+        switchOpenloginShow(){
+            const openloginwrap = this.$refs.openloginwrap;
+            if( openloginwrap ){
+                this.openloginShow = true;
+                setTimeout(() => {
+                    const openloginwrapHeight = openloginwrap.offsetHeight;
+                    this.openloginShow = openloginwrapHeight;
+                }, 50);                
+            }         
+        },
+        switchLoginShow(loginType){
+            if( loginType == this.extLoginType ){
+                return false;
+            }
+            return true;
+        },
+        pollingApiStatus(Token,timeout){
+            if( !this.pollStatus ) return false;
+            const pollingcurrentTime = new Date().getTime();
+            if( pollingcurrentTime - this.pollingstartTime > timeout * 1000 ){ 
+                this.qrcodeload = 3;
+            }else{
+                this.fetchApi('wxlogin', {
+                    _this : this,
+                    calldata : true,
+                    method: 'POST',
+                    timeout : 500,
+                    retfill : true,
+                    data: {
+                        logintype : 'qrcode',
+                        verifycode : Token
+                    },
+                    callback : (retData, _this) => {
+                        if( retData.code == 5 ){
+                            _this.popInit({
+                                title  : retData.data.title,
+                                content : retData.data.content,
+                                mWidth:'400px',
+                                startThis : _this,
+                            });
+                        }else if(retData.code == 7){
+                            setTimeout(() => {                        
+                                this.pollingApiStatus(Token,timeout);
+                            }, 1500);
+                        }else{
+                            location.reload();
+                        }                                            
+                    }
+                });
+            }
+        },
+        initWxLogin(){
+            this.qrcodeload = 1;
+            this.qrcodehtml = '';
+            this.fetchApi('wxloginQrcode', {
+                _this : this,
+                calldata : true,
+                method: 'POST',
+                timeout : 500,
+                retfill : false,
+                callback : (retData, _this) => {
+                    const wxcode = QRCode({
+                        msg : retData.url
+                        ,dim :   140
+                        ,pad :   3          
+                    });
+                    this.qrcodeload = 2;
+                    this.qrcodehtml = wxcode.outerHTML;
+                    if (this.pollingTimeoutId) {
+                        clearTimeout(this.pollingTimeoutId);
+                    }
+                    this.pollingTimeoutId = setTimeout(() => {
+                        this.pollingstartTime = new Date().getTime();
+                        this.pollStatus = true;
+                        this.pollingApiStatus(retData.token,120);
+                    }, 1000);                     
+                }
+            }); 
+                    
+        },
+        init(){
+            const _this = this;
+            _this.$watch('popData.Emon', function(popemon,oldpopemon){
+                if( popemon != oldpopemon ){
+                    if( !popemon ){ 
+                        _this.pollStatus = false; 
+                    }else if( _this.extLoginType == 'wxlogin' ){
+                        _this.initWxLogin();
+                    }
+                }                    
+            });
+            _this.$watch('extLoginType', function(newType){
+                if( newType != 'wxlogin' ){
+                    _this.pollStatus = false;
+                }              
+            });
+        }
+    }));
+
+});
