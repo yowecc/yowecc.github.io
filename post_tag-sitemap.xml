@@ -1,6 +1,12 @@
 <?xml version='1.0' encoding='UTF-8'?><?xml-stylesheet type='text/xsl' href='https://yowe.cc/wp-content/plugins/google-sitemap-generator/sitemap.xsl'?><!-- sitemap-generator-url='http://www.arnebrachhold.de' sitemap-generator-version='4.1.21' -->
-<!-- generated-on='2024-10-16 am3:38' -->
+<!-- generated-on='2024-10-16 pm2:31' -->
 <urlset xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>	<url>
+		<loc>https://yowe.cc/tag/ai%e5%ad%97%e5%b9%95%e7%bb%84/</loc>
+		<lastmod>2024-10-16T14:22:31+00:00</lastmod>
+		<changefreq>always</changefreq>
+		<priority>0.3</priority>
+	</url>
+	<url>
 		<loc>https://yowe.cc/tag/erp/</loc>
 		<lastmod>2024-10-15T15:20:08+00:00</lastmod>
 		<changefreq>always</changefreq>
@@ -91,6 +97,12 @@
 		<priority>0.3</priority>
 	</url>
 	<url>
+		<loc>https://yowe.cc/tag/%e6%99%ba%e6%85%a7%e5%ae%b6%e5%b1%85/</loc>
+		<lastmod>2024-10-16T14:22:30+00:00</lastmod>
+		<changefreq>always</changefreq>
+		<priority>0.3</priority>
+	</url>
+	<url>
 		<loc>https://yowe.cc/tag/%e7%94%b5%e5%ad%90%e5%95%86%e5%8a%a1/</loc>
 		<lastmod>2024-10-16T02:50:24+00:00</lastmod>
 		<changefreq>always</changefreq>
@@ -121,9 +133,15 @@
 		<priority>0.3</priority>
 	</url>
 	<url>
+		<loc>https://yowe.cc/tag/%e8%a7%86%e9%a2%91%e6%90%ac%e8%bf%90/</loc>
+		<lastmod>2024-10-16T14:22:31+00:00</lastmod>
+		<changefreq>always</changefreq>
+		<priority>0.3</priority>
+	</url>
+	<url>
 		<loc>https://yowe.cc/tag/%e8%af%ad%e9%9f%b3%e8%af%86%e5%88%ab/</loc>
 		<lastmod>2024-10-16T02:50:32+00:00</lastmod>
 		<changefreq>always</changefreq>
 		<priority>0.3</priority>
 	</url>
-</urlset><!-- Request ID: 8edb395dc357984c4401872733efa48f; Queries for sitemap: 23; Total queries: 55; Seconds: 0; Memory for sitemap: 1KB; Total memory: 6MB -->
+</urlset><!-- Request ID: 56aa7dafbb8f717273866f7f3abecd06; Queries for sitemap: 26; Total queries: 58; Seconds: 0.01; Memory for sitemap: 1KB; Total memory: 6MB -->
