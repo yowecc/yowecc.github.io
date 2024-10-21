@@ -1,0 +1,536 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name='robots' content='max-image-preview:large' />
+<title>免费开源的员工入职平台：通过 Slack 或 Web 门户简化新员工入职流程 - 哟喂</title>
+<meta name="keywords" content="员工管理," />
+<meta name="description" content="ChiefOnboarding 是一个免费的开源员工入职平台。您可以通过 Slack 或控制面板让新员工入职。" />
+<script type="text/javascript">
+/* <![CDATA[ */
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15.0.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15.0.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/yowe.cc\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.6.2"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83d\udc26\u200d\u2b1b","\ud83d\udc26\u200b\u2b1b")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+/* ]]> */
+</script>
+<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link rel='stylesheet' id='wp-block-library-css' href='../wp-includes/css/dist/block-library/style.min.css%3Fver=6.6.2.css' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='github-repo-style-css' href='../wp-content/plugins/github-repo-info/css/style2.css%3Fver=2.0.4.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-bootstrap-css' href='../wp-content/themes/meteorpro/assets/css/bootstrap.min.css%3Fver=2.2.1.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-main-css' href='../wp-content/themes/meteorpro/assets/css/main.min.css%3Fver=1728964183.css' type='text/css' media='all' />
+<style id='meteor-main-inline-css' type='text/css'>
+ :root, [data-bs-theme=light]{ --bs-link-hover-color:#5696f6; --cbg-color:#5696f6; --cbg-gradient:var(--cx-gradient-deongaree); --bs-link-hover-color-rgb: 86,150,246; --cbg-lightgradient:var(--cx-gradient-purple); --avatar-opacity:0.5; } [data-bs-theme=dark] { --bs-link-hover-color: #5696f6; } .sort-56 {--cbcar-color:#ffa387 0%, #fe4f70 100%}.sort-57 {--cbcar-color:#2af598 0%, #009efd 100%}.sort-59 {--cbcar-color:#6772FF 0%, #00F9E5 100%}.sort-60 {--cbcar-color:#1c5aff 0%, #e48bfa 100%}.sort-61 {--cbcar-color:#d71881 0%, #409bcd 100%}.sort-62 {--cbcar-color:#50cc7f 0%, #f5d100 100%}.sort-66 {--cbcar-color:#2af598 0%, #009efd 100%}.sort-67 {--cbcar-color:#2af598 0%, #009efd 100%}.sort-68 {--cbcar-color:#243949 0%, #517fa4 100%}.sort-76 {--cbcar-color:#6772FF 0%, #00F9E5 100%}.sort-96 {--cbcar-color:#50cc7f 0%, #f5d100 100%}.blackcolor {backdrop-filter: blur(5px) brightness(90%)}
+</style>
+<link rel='stylesheet' id='kz-uc-style-css' href='../wp-content/uploads/meteor-extend/usercenter-extend/assets/css/uc.min.css%3Fver=1729518969.css' type='text/css' media='all' />
+<link rel='stylesheet' id='kz-userlogin-css' href='../wp-content/uploads/meteor-extend/userlogin-extend/assets/css/login.min.css%3Fver=1.0.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-swiper-css' href='../wp-content/themes/meteorpro/assets/css/swiper-bundle.min.css%3Fver=2.2.1.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-icons-css' href='https://at.alicdn.com/t/c/font_1989294_g60v0fz2ljj.css?ver=2.2.1' type='text/css' media='all' />
+<link rel="canonical" href="index.html" />
+<link rel="icon" href="../wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-32x32.png" sizes="32x32" />
+<link rel="icon" href="../wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="../wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-180x180.png" />
+<meta name="msapplication-TileImage" content="https://yowe.cc/wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-270x270.png" />
+</head>
+
+<body class="post-template-default single single-post postid-735 single-format-standard wp-custom-logo cxtheme-body overflow-y-scroll cxtheme-width-theme" x-data="xhData" :data-bs-theme="darkMode ? 'dark' : ''" :class="{'dark': darkMode}">
+        <div class="site-wrapper navfixed">
+        <header class="header-s1" :class="{'onfixed' : searchData.Popup}" id="header-s1">
+            <div class="headnav">
+                <div class="container-xl h-container hwdiy">
+                    <div class="cxlogo">
+                                                <a href="../index.html" aria-label="哟喂">
+                            <img src="../wp-content/uploads/2024/09/yowe-logo-400.png" alt="哟喂" class="c-light" width="320" height="120"/>
+                            <img src="../wp-content/uploads/2024/09/yowe-logo-400.png" alt="哟喂" class="c-dark" width="320" height="120"/>
+                        </a>
+                    </div>
+                    <nav class="head-menu d-lg-flex navalign-left">
+                        <ul id="menu-main-menu" class="navbar-nav">
+                        <li class="menu-item"><a href="http://yowe.cc/">首页</a></li>
+<li class="menu-item"><a href="../category/科技资讯/index.html">科技资讯</a></li>
+<li class="menu-item current-post-ancestor current-menu-parent menu-item-has-children"><a href="../category/企业通用/index.html">企业通用 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/电子商务/index.html">电子商务</a></li>
+	<li class="menu-item"><a href="../category/智慧农业/index.html">智慧农业</a></li>
+	<li class="menu-item"><a href="../category/健康医疗/index.html">健康医疗</a></li>
+	<li class="menu-item"><a href="../category/多媒体/index.html">多媒体</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/人工智能/index.html">人工智能 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/人工智能/aigc/index.html">AIGC</a></li>
+	<li class="menu-item"><a href="../category/人工智能/多智体/index.html">多智体</a></li>
+	<li class="menu-item"><a href="../category/人工智能/数据标注/index.html">数据标注</a></li>
+	<li class="menu-item"><a href="../category/人工智能/智能应用/index.html">智能应用</a></li>
+	<li class="menu-item"><a href="../category/人工智能/机器学习/index.html">机器学习</a></li>
+	<li class="menu-item"><a href="../category/人工智能/自然语言处理/index.html">自然语言处理</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/工业物联/index.html">工业物联 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/工业物联/pcb/index.html">PCB</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工业视觉/index.html">工业视觉</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工控仿真/index.html">工控仿真</a></li>
+	<li class="menu-item"><a href="../category/工业物联/数控机床/index.html">数控机床</a></li>
+	<li class="menu-item"><a href="../category/工业物联/无人机/index.html">无人机</a></li>
+	<li class="menu-item"><a href="../category/工业物联/物联网/index.html">物联网</a></li>
+	<li class="menu-item"><a href="../category/工业物联/电路设计/index.html">电路设计</a></li>
+	<li class="menu-item"><a href="../category/工业物联/自动驾驶/index.html">自动驾驶</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/开发运维/index.html">开发运维 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/开发运维/云计算/index.html">云计算</a></li>
+	<li class="menu-item"><a href="../category/开发运维/前端开发/index.html">前端开发</a></li>
+	<li class="menu-item"><a href="../category/开发运维/后端开发/index.html">后端开发</a></li>
+	<li class="menu-item"><a href="../category/开发运维/客户端/index.html">客户端</a></li>
+	<li class="menu-item"><a href="../category/开发运维/嵌入式/index.html">嵌入式</a></li>
+	<li class="menu-item"><a href="../category/开发运维/开发工具/index.html">开发工具</a></li>
+	<li class="menu-item"><a href="../category/开发运维/数据库/index.html">数据库</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item"><a href="../category/金融科技/index.html">金融科技</a></li>
+<li class="menu-item"><a href="../category/工具软件/index.html">工具软件</a></li>
+                        </ul>
+                    </nav>
+                    <div class="header-r" style="--scale:1;--srcolor:#ac44da">
+                        <ul class="h-btnbox sm-cnone d-flex gap-1">
+                            <li class="list-inline-item">
+                                <a href="../ranking/index.html" target="_blank" aria-label="Ranking">
+                                    <i class="cxicon cxicon-ranking me-0"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript:;" @click="darkMode = !darkMode;localStorage.setItem('darkMode', darkMode);" aria-label="Mode Switch">
+                                    <i class="cxicon cxicon-sunlight me-0" :class="{'d-none':!darkMode}"></i>
+                                    <i class="cxicon cxicon-moon me-0" :class="{'d-none':darkMode}"></i>
+                                </a>
+                            </li> 
+                        </ul>
+                        <div class="h-buttons d-flex">
+                            <button type="button" class="search-icon btn-default icon-button" :class="{'active':searchData.Popup}" @click="searchData.searchbtnClick()" title="Search Btn">
+                                <i class="cxicon cxicon-error me-0 anim"></i>
+                                <i class="cxicon cxicon-search me-0 anim"></i>
+                            </button>
+                            <!-- 移动端菜单 -->
+                            <button type="button" class="search btn-default icon-button d-lg-none" @click="moibleMenu = popData.bgShow = true" title="Menu Btn">
+                                <i class="cxicon cxicon-menu3 me-0"></i>
+                            </button>
+                            <!-- menu.end -->
+                                                    </div>
+                    </div>
+
+                </div>
+            </div>            
+        </header><!-- header.end-->
+        <!-- Moible Nav -->
+        <div class="mobile-navbox anim" :class="{'visible': moibleMenu}">
+            <button type="button" class="btn-close" aria-label="Close" @click="popData.bgShow = moibleMenu = false"><i class="cxicon cxicon-caidanshouqi"></i></button>
+            <div class="m-menulogo p-4 pt-3"></div>
+            <div class="m-navbox p-4 pt-0">
+                <ul id="moible-menu" class="m-nav pe-4">
+                <li class="menu-item"><a href="http://yowe.cc/">首页</a></li>
+<li class="menu-item"><a href="../category/科技资讯/index.html">科技资讯</a></li>
+<li class="menu-item current-post-ancestor current-menu-parent menu-item-has-children"><a href="../category/企业通用/index.html">企业通用 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/电子商务/index.html">电子商务</a></li>
+	<li class="menu-item"><a href="../category/智慧农业/index.html">智慧农业</a></li>
+	<li class="menu-item"><a href="../category/健康医疗/index.html">健康医疗</a></li>
+	<li class="menu-item"><a href="../category/多媒体/index.html">多媒体</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/人工智能/index.html">人工智能 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/人工智能/aigc/index.html">AIGC</a></li>
+	<li class="menu-item"><a href="../category/人工智能/多智体/index.html">多智体</a></li>
+	<li class="menu-item"><a href="../category/人工智能/数据标注/index.html">数据标注</a></li>
+	<li class="menu-item"><a href="../category/人工智能/智能应用/index.html">智能应用</a></li>
+	<li class="menu-item"><a href="../category/人工智能/机器学习/index.html">机器学习</a></li>
+	<li class="menu-item"><a href="../category/人工智能/自然语言处理/index.html">自然语言处理</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/工业物联/index.html">工业物联 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/工业物联/pcb/index.html">PCB</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工业视觉/index.html">工业视觉</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工控仿真/index.html">工控仿真</a></li>
+	<li class="menu-item"><a href="../category/工业物联/数控机床/index.html">数控机床</a></li>
+	<li class="menu-item"><a href="../category/工业物联/无人机/index.html">无人机</a></li>
+	<li class="menu-item"><a href="../category/工业物联/物联网/index.html">物联网</a></li>
+	<li class="menu-item"><a href="../category/工业物联/电路设计/index.html">电路设计</a></li>
+	<li class="menu-item"><a href="../category/工业物联/自动驾驶/index.html">自动驾驶</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/开发运维/index.html">开发运维 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/开发运维/云计算/index.html">云计算</a></li>
+	<li class="menu-item"><a href="../category/开发运维/前端开发/index.html">前端开发</a></li>
+	<li class="menu-item"><a href="../category/开发运维/后端开发/index.html">后端开发</a></li>
+	<li class="menu-item"><a href="../category/开发运维/客户端/index.html">客户端</a></li>
+	<li class="menu-item"><a href="../category/开发运维/嵌入式/index.html">嵌入式</a></li>
+	<li class="menu-item"><a href="../category/开发运维/开发工具/index.html">开发工具</a></li>
+	<li class="menu-item"><a href="../category/开发运维/数据库/index.html">数据库</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item"><a href="../category/金融科技/index.html">金融科技</a></li>
+<li class="menu-item"><a href="../category/工具软件/index.html">工具软件</a></li>
+                </ul>
+            </div>
+            <div class="m-btnbox p-4">
+                <ul class="h-btnbox">
+                    <li class="list-inline-item">
+                        <a href="index.html#" target="_blank" aria-label="Msg">
+                            <i class="cxicon cxicon-xiaoxi"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="javascript:;" @click="darkMode = !darkMode;localStorage.setItem('darkMode', darkMode);"  aria-label="Mode Switch">
+                            <i class="cxicon cxicon-sunlight"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- MN.end -->
+        
+
+        <main class="main-container" role="main">
+<!-- 3 -->
+<section class="wi widget-coltow" x-data="Xh_Postmeta">
+    <div class="banner trem-banner mb-0">
+        <div class="container-xl mw960">
+            <div class="article-head d-flex flex-column justify-content-end align-items-center gap-4 pb-5">
+                <h1 class="post-title">免费开源的员工入职平台：通过 Slack 或 Web 门户简化新员工入职流程</h1>                <div class="article-meta">
+<ul class="meta-itembox">
+<li class="list-inline-item"><a class="author me-0" href="../author/yowe/index.html"><figure class="figure-avatar userid-1"><img alt='' src='../wp-content/themes/meteorpro/assets/images/lazy.png' data-src='http://yowe.cc/wp-content/uploads/userfigure/avatar-yowe.webp?v=1728971186' srcset='../wp-content/uploads/userfigure/avatar-yowe.webp%3Fv=1728971186 2x' class='lozad avatar avatar-30 photo avatar-default' height='30' width='30' decoding='async'/></figure>哟喂</a></li>
+<li class="list-inline-item"><a href="../category/企业通用/index.html" rel="category tag">企业通用</a></li>
+<li class="list-inline-item">2024-10-17</li>
+</ul>
+</div>            </div>
+        </div>
+    </div>
+    <div class="container-xl mw960">
+        <div class="main-content">
+            
+            <nav class="breadcrumbs opacity-75 my-lg-2" aria-label="Breadcrumb Nav">
+                <ol class="breadcrumb flex-nowrap">
+                
+        <li class="item-home flex-shrink-0">
+            <a  href="../index.html" title="哟喂">
+                <span>首页</span>
+            </a>
+        </li>
+
+        <li class="item-category flex-shrink-0">
+            <a  href="../category/企业通用/index.html" title="企业通用">
+                <span>企业通用</span>
+            </a>
+        </li>
+
+        <li class="item-current line-one pe-4">
+            <a  href="index.html" title="免费开源的员工入职平台：通过 Slack 或 Web 门户简化新员工入职流程">
+                <span>免费开源的员工入职平台：通过 Slack 或 Web 门户简化新员工入职流程</span>
+            </a>
+        </li>
+                </ol>
+            </nav>
+                    <article class="post-735 post type-post status-publish format-standard hentry category-55 tag-116">            
+            <!-- 文章正文 -->
+            <div class="article-body mb-4 border-top-0 pt-0">
+                
+<p> </p>
+
+
+
+<figure class="wp-block-image size-large"><img fetchpriority="high" decoding="async" width="1024" height="793" src="../wp-content/uploads/2024/10/image-2-1024x793.png" alt="" class="wp-image-752"/></figure>
+
+
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<p><strong>ChiefOnboarding</strong> 是人力资源领域的一款开源软件，专注于优化员工入职培训这一招聘环节。尽管入职培训常被忽视，但其对员工留任率和企业财务健康至关重要。有效的入职实践可以显著降低员工流失率，避免不必要的财务损失。</p>
+</blockquote>
+
+
+
+<blockquote class="wp-block-quote is-layout-flow wp-block-quote-is-layout-flow">
+<h2 class="wp-block-heading">软件概述</h2>
+</blockquote>
+
+
+
+<p>ChiefOnboarding 由 <strong>Elestio</strong> 全面管理，旨在为新员工提供顺畅的入职体验。该平台适用于 IT 团队、人力资源部门、管理者、导师以及新员工，能够帮助组织高效结构化入职流程。用户可以选择在任何云平台或本地进行部署，且系统具备出色的可扩展性与安全性。</p>
+
+
+
+<p><strong>Elestio</strong> 提供全方位的管理服务，包括安装、配置、加密、安全、备份、实时监控和软件更新，确保用户无需担心与 DevOps 相关的事务。此外，平台配备专用的硬件资源，确保用户获得完整的访问权限和内核级别的安全防护。通过自动更新功能，系统能够定期优化性能和安全性，节省企业的维护成本。ChiefOnboarding 的定价透明，涵盖计算、存储、带宽、安全性等所有费用，并不受供应商锁定限制，用户可以随时迁移到其他云服务提供商。</p>
+
+
+
+<h2 class="wp-block-heading">主要特性</h2>
+
+
+
+<ul class="wp-block-list">
+<li><strong>自动化集成</strong>：轻松配置用户帐户并触发 webhooks，支持自定义集成。</li>
+
+
+
+<li><strong>入职前准备</strong>：在新员工正式入职之前，通过预入职页面进行欢迎，建立良好印象。</li>
+
+
+
+<li><strong>待办事项管理</strong>：跟踪新员工的任务，并允许他们在线填写所需表单。</li>
+
+
+
+<li><strong>资源访问</strong>：提供知识库和在线课程，帮助新员工快速适应工作环境。</li>
+
+
+
+<li><strong>渐进式任务安排</strong>：根据时间或任务完成情况，分阶段引导新员工，减少压力感。</li>
+
+
+
+<li><strong>徽章激励</strong>：对新员工的成就进行奖励，以提升积极性。</li>
+
+
+
+<li><strong>新员工介绍</strong>：促进新员工与同事之间的熟悉与互动。</li>
+
+
+
+<li><strong>管理员协作</strong>：管理员可以与团队协作，处理新员工入职过程中所需的任务。</li>
+
+
+
+<li><strong>多语言支持</strong>：支持英语、荷兰语、葡萄牙语、德语、土耳其语、法语、西班牙语和日语等多种语言。</li>
+
+
+
+<li><strong>时区适应</strong>：根据新员工所在时区发送消息，避免在不合适的时间打扰他们。</li>
+
+
+
+<li><strong>Slack 机器人和仪表盘</strong>：新员工可以通过 Slack 机器人或仪表盘访问所有功能，灵活便捷。</li>
+
+
+
+<li><strong>高度可定制</strong>：支持企业品牌标识、配色方案及电子邮件模板的自定义，确保与企业形象一致。</li>
+
+
+
+<li><strong>开源与隐私保护</strong>：ChiefOnboarding 完全开源，遵循 AGPLv3 许可证。用户可选择自行托管或由 Elestio 提供托管服务。</li>
+</ul>
+
+
+
+<p>借助 ChiefOnboarding，企业能够创建统一的新员工入职时间表，降低新员工入职初期的不适感，提升整体入职体验和质量。通过开源和灵活的部署选择，ChiefOnboarding 为人力资源管理提供了强有力的支持，帮助企业实现更高效的人才管理。</p>
+
+
+
+
+<div class="github-repo-card">
+    <div class="github-repo-header">
+        <img decoding="async" src="https://avatars.githubusercontent.com/u/9919?s=200&v=4" alt="GitHub logo" class="github-repo-logo">
+        <div class="github-repo-title">
+            <a href="https://github.com/chiefonboarding/ChiefOnboarding" target="_blank">chiefonboarding/ChiefOnboarding</a>
+        </div>
+        <div class="github-repo-stats">
+            Star: 674 | Fork: 123        </div>
+    </div>
+    <div class="github-repo-main">
+        <div class="github-repo-desc">
+            <p>Free and open-source employee onboarding platform. Onboard new hires through Slack or the web portal.</p>
+        </div>
+        <div class="github-repo-commits">
+            <h6>Recently Commits:</h6>
+            <ul><li><a href='https://github.com/chiefonboarding/ChiefOnboarding/commit/929bf7ecd471ce24c88e0800c1f91b3d82c10973' target='_blank'>
+                929bf7e</a> 
+                Release v2.2.4 by Stan<span>2024-09-10</span></li><li><a href='https://github.com/chiefonboarding/ChiefOnboarding/commit/c8cbf02c8d9bca2aaacb4dc1f14902a0f52a264d' target='_blank'>
+                c8cbf02</a> 
+                Fix not being able to update builder due to unexpected type (#505) by Stan Triepels<span>2024-09-08</span></li><li><a href='https://github.com/chiefonboarding/ChiefOnboarding/commit/660fc12bd79d64611fa00aad40f57ea5e04aa276' target='_blank'>
+                660fc12</a> 
+                Chore(deps): bump cryptography from 43.0.0 to 43.0.1 in /back (#503)
+
+Signed-off-by: dependabot[bot] <support@github.com>
+Co-authored-by: dependabot[bot] <49699333+dependabot[bot]@users.noreply.github.com> by dependabot[bot]<span>2024-09-04</span></li></ul>        </div>
+    </div>
+    
+    <div class="github-repo-footer">
+        <span>License：AGPL-3.0</span>
+        <a href="https://github.com/chiefonboarding/ChiefOnboarding/releases" target="_blank" class="download-btn">Download</a>
+    </div>
+    
+</div>
+
+    
+            </div>
+                                <!-- 底部元信息 -->
+        <div class="post-footmeta mb-5">
+            <div class="row d-flex align-items-center">
+                <div class="col-md-6 col-12">
+                    <div class="post-share justify-content-sm-start mb-3 mb-sm-0">
+                        <div class="post-btnmeta">
+                            <span class="post-like anim cursor-pointer" :class="postMeta.postLike_on ? 'text-auto' : ''" @click="_setlike"><i class="cxicon cxicon-zan-black"></i> <em style="font-style: normal" x-text="postMeta.postLike" x-show="postMeta.postLike !== 0"></em></span>
+                        </div>
+                        <i class="cxline-1"></i>
+                        <ul class="social-icons" x-data="{'postThumb':'http://yowe.cc/wp-content/uploads/2024/10/image-2-1024x793.png','postLink' : window.location.href, 'postTitle' : document.title}">
+                            <li class="list-inline-item">
+                                <a href="javascript:;" title="分享到微信" rel="noreferrer noopener nofollow" x-bind="weixinLink"><i class="cxicon cxicon-weixin"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript:;" title="分享到微博" rel="noreferrer noopener nofollow" x-bind="weiboLink"><i class="cxicon cxicon-weibo"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript:;" title="分享到QQ" rel="noreferrer noopener nofollow" x-bind="qqLink"><i class="cxicon cxicon-qq"></i></a>
+                            </li>
+                        </ul>
+                                <i class="cxline-1"></i>
+        <div class="post-btnmeta ttop-1">
+            <span class="post-collect fs-7 anim py-1 cursor-pointer" :class="postMeta.postCollect_on ? 'text-auto' : ''" @click="_setCollect"><i class="cxicon cxicon-collect-black me-1" style="--scale:1.3"></i><span x-text="postMeta.postCollect_on ? '已收藏' : '收藏'"></span></span>
+        </div>
+                            </div>
+                </div>
+                <div class="col-md-6 col-12 text-center text-md-end">
+                    <div class="tags">
+                        <a href="../tag/员工管理/index.html" rel="tag">#员工管理</a>                    </div>
+                </div>
+            </div>
+        </div>
+                <div class="about-author p-4 mb-5 flex-sm-row">
+            <div class="thumb"><a class="author" href="../author/yowe/index.html" title="哟喂"><figure class="figure-avatar userid-1"><img alt='' src='../wp-content/themes/meteorpro/assets/images/lazy.png' data-src='http://yowe.cc/wp-content/uploads/userfigure/avatar-yowe.webp?v=1728971186' srcset='../wp-content/uploads/userfigure/avatar-yowe.webp%3Fv=1728971186 2x' class='lozad avatar avatar-100 photo avatar-default' height='100' width='100' decoding='async'/></figure></a></div>            <div class="details ps-sm-4 mt-3 mt-sm-0 text-sm-start">
+                <div class="name fw-bold mb-2 fs-4"><a href="../author/yowe/index.html" title="文章作者 哟喂" rel="author">哟喂</a></div>
+                <p>为您推荐最优质的软件系统和最专业的技术服务</p>
+                            </div>
+        </div>
+                <div class="row nextprev-post-wrapper mb-5 wht-ade8">
+            <div class="col-md-6 col-12 mb-4 mb-sm-0">
+                <div class="nextprev-post prev">
+                    <span class="nextprev-text fw-semibold fs-7 opacity-75"> 上一篇</span>
+                    <h5 class="post-title fs-5 lh-base">
+                        <a href="../tasks-md-基于-markdown-的轻量任务管理工具/index.html" rel="prev">Tasks.md —— 基于 Markdown 的轻量任务管理工具</a>                    </h5>
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="nextprev-post next text-sm-end">
+                    <span class="nextprev-text fw-semibold fs-7 opacity-75">下一篇</span>
+                    <h5 class="post-title fs-5 lh-base">
+                        <a href="../hc物业管理系统：多地成功运营，集成收费、报修、/index.html" rel="next">HC物业管理系统：多地成功运营，集成收费、报修、门禁等全方位服务</a>                    </h5>
+                </div>
+            </div>
+        </div>
+                <div class="mso nobg" x-data="xgPostdata">
+            <div class="module-tit item-center noborder">
+                <h3 style="font-size:1rem"><i class="cxline"></i>延伸阅读:</h3>
+                <p></p>
+                <div class="more-sort">
+                    <button type="button" class="btn btn-xsm btn-sort lh-1 opacity-75" :class="{'active':xgpostType == 'hot'}" @click="xgPostrand( 'hot' )">热度</button>  
+                    <i class="cxline-1 mx-1"></i>
+                    <button type="button" class="btn btn-xsm btn-sort lh-1 opacity-75" :class="{'active':xgpostType == 'new'}" @click="xgPostrand( 'new' )">时效</button>
+                </div>
+            </div>
+            <div class="module-content jsminHeight">
+                <div class="hotpl w-100" x-ref="xgpostHot" :class="{'active':xgpostType == 'hot'}">
+                    <div class="nonebox py-5"><div class="iconsvg"></div><p>暂无内容!</p></div>                </div>
+                <div class="newpl w-100" x-ref="xgpostNew" :class="{'active':xgpostType == 'new'}">
+                    <div class="d-flex justify-content-center mt-5 opacity-50" style="min-height: 300px;">
+                        <div class="spinner-border text-danger sbw-2" role="status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                </article>
+                </div>
+    </div>
+</section>
+<!-- 3.end --></main><!-- main.end -->
+
+<footer class="footer-s1">
+    <div class="linebox bg-auto"></div>
+    <div class="foottop">
+        <div class="container-xl">
+            <div class="footmain-box">
+                <div class="aboutus_link"><a href="https://0060.my" target="_blank">0060</a><a href="https://www.icnma.com/" target="_blank">美熙科技说</a><a href="https://ambertaste.com/" target="_blank">安泊尔调料</a></div><div class="footer-desc">免责声明：本网站部分内容由用户自行上传，如权利人发现存在误传其作品情形，请及时与本站联系。</div><div class="foot-copyright">哟喂 © 2024. All Rights Reserved.</div>            </div>
+        </div>
+    </div>
+</footer>
+<!-- 弹出层代码 -->
+<div class="popbg-box anim" :class="{visible: popData.bgShow,blackcolor: popData.bgBlack }" @click="_bgclose('bg')"></div>
+<div class="emon rounded" :class="{visible: popData.Emon,loading: popData.loadclass,mbemon: popData.mbemon}" :style="popData.popMwidth ? '--maxwidth:'+popData.popMwidth : ''">
+    <div class="emon-close" @click="_bgclose('btn')" _widese="574050"><i class="cxicon cxicon-error" style="--scale:.85"></i></div>
+    <div class="emon-title" x-show="popData.title" x-html="popData.title"></div>
+    <div class="emon-content" x-html="popData.content"></div>
+</div>
+
+<!-- 弹窗部分结束 -->
+<div class="search-popup anim" :class="{'visible': searchData.Popup}">
+    <div class="search-content anim" :class="{'top-lg-40':searchData.Inputtop}">
+        <div class="search-form-box">
+            <form class="d-flex search-form" method="get" @submit.prevent="searchData.searchFormSubmit($data)" action="../index.html">
+                <div class="d-flex w-100 justify-content-between align-items-center position-relative">
+                    <div class="search-inputbox flex-grow-1">
+                        <input class="form-control search-input py-2 py-lg-3 px-4 border-2 anim" @input.debounce.1000ms="searchData.searchFormSubmit($data)" x-model="searchData.formData.word" autocomplete="off" placeholder="搜索并按回车键..." type="text" name="s" aria-label="搜索">
+                    </div>
+                    <botton type="submit" class="submitbox position-absolute top-0 end-0 d-flex align-items-center px-4 h-100 opacity-50">
+                        <i class="cxicon cxicon-search" :class="{'d-none':searchData.loadIng}"></i>
+                        <span class="spinner-border spinner-border-sm spinner-b1" :class="{'d-none':!searchData.loadIng}"></span>
+                    </botton>
+                </div>
+            </form>
+        </div>   
+        <ul class="searchList anim pt-4" x-html="searchData.postList" x-show="!searchData.Inputtop && searchData.formData.word" x-transition :class="{'opacity-25':searchData.loadIng}"></ul>          
+    </div>
+</div>
+<!-- .end -->
+</div>
+<!--.sit-wrapper-->
+         <template x-ref="loginformtpl">
+            <div class="logintemplate" x-data="extendLoginData()">
+                <div class="position-relative z-1">
+                    <div class="head-login w-100 px-3 d-none" style="margin-top:10px;min-height:1px">
+                        <p class="fs-7 mb-0 text-center"><span class="sticky-color" style="--cbg-lightgradient:var(--cx-gradient-purple)"></span></p>
+                    </div>                  
+                    <div class="loginnone">暂无可用登录表单，请到后台完成配置！</div><div class="tip fs-6 text-center opacity-50 pt-2">用户成功登录即表示同意《<a href="index.html#">用户协议</a>》《<a href="index.html#">隐私政策</a>》！</div>              
+                </div>                
+            </div>
+        </template> 
+        <script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/meteor.js%3Fver=2.2.1" id="meteor-main-js"></script>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/plugins.min.js%3Fver=2.2.1" id="meteor-plugins-js"></script>
+<script type="text/javascript" src="../wp-content/uploads/meteor-extend/userlogin-extend/assets/js/login.js%3Fver=1.0" id="kz-userlogin-js"></script>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/swiper-bundle.min.js%3Fver=2.2.1" id="meteor-swiper-js"></script>
+<script type="text/javascript" id="meteor-alpine-js-extra">
+/* <![CDATA[ */
+var cxjs = {"homeurl":"https:\/\/yowe.cc","jsonapi":"https:\/\/yowe.cc\/wp-json\/cxv1\/","themedir":"https:\/\/yowe.cc\/wp-content\/themes\/meteorpro","ajaxurl":"https:\/\/yowe.cc\/wp-admin\/admin-ajax.php","endorseMsg":"\u60a8\u5df2\u7ecf\u8868\u8fc7\u6001\u4e86\uff01","popMbemon":"","postId":"735"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/alpine.min.js%3Fver=3.13.10" id="meteor-alpine-js"></script>
+</body>
+
+</html>
