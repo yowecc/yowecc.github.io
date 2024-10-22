@@ -1,0 +1,900 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name='robots' content='max-image-preview:large' />
+<title>MySQL 优化都有哪些 技巧？ - 哟喂</title>
+<meta name="keywords" content="mysql," />
+<meta name="description" content="面试官如果问你：你会从哪些维度进行MySQL性能优化？你会怎么回答？所谓的性能优化，一般针对的是MySQL查询的优化。既然是优化查询，我们自然要先知道查询操作要经过哪些环节，然后思考可以在哪些环节进行优化。下面从5个角度..." />
+<script type="text/javascript">
+/* <![CDATA[ */
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15.0.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15.0.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/yowe.cc\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.6.2"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83d\udc26\u200d\u2b1b","\ud83d\udc26\u200b\u2b1b")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+/* ]]> */
+</script>
+<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link rel='stylesheet' id='wp-block-library-css' href='../wp-includes/css/dist/block-library/style.min.css%3Fver=6.6.2.css' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='github-repo-style-css' href='../wp-content/plugins/github-repo-info/css/style2.css%3Fver=2.0.5.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-bootstrap-css' href='../wp-content/themes/meteorpro/assets/css/bootstrap.min.css%3Fver=2.2.1.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-main-css' href='../wp-content/themes/meteorpro/assets/css/main.min.css%3Fver=1728964183.css' type='text/css' media='all' />
+<style id='meteor-main-inline-css' type='text/css'>
+ :root, [data-bs-theme=light]{ --bs-link-hover-color:#5696f6; --cbg-color:#5696f6; --cbg-gradient:var(--cx-gradient-deongaree); --bs-link-hover-color-rgb: 86,150,246; --cbg-lightgradient:var(--cx-gradient-purple); --avatar-opacity:0.5; } [data-bs-theme=dark] { --bs-link-hover-color: #5696f6; } .sort-56 {--cbcar-color:#ffa387 0%, #fe4f70 100%}.sort-57 {--cbcar-color:#2af598 0%, #009efd 100%}.sort-59 {--cbcar-color:#6772FF 0%, #00F9E5 100%}.sort-60 {--cbcar-color:#1c5aff 0%, #e48bfa 100%}.sort-61 {--cbcar-color:#d71881 0%, #409bcd 100%}.sort-62 {--cbcar-color:#50cc7f 0%, #f5d100 100%}.sort-66 {--cbcar-color:#2af598 0%, #009efd 100%}.sort-67 {--cbcar-color:#2af598 0%, #009efd 100%}.sort-68 {--cbcar-color:#243949 0%, #517fa4 100%}.sort-76 {--cbcar-color:#6772FF 0%, #00F9E5 100%}.sort-96 {--cbcar-color:#50cc7f 0%, #f5d100 100%}.blackcolor {backdrop-filter: blur(5px) brightness(90%)}
+</style>
+<link rel='stylesheet' id='kz-uc-style-css' href='../wp-content/uploads/meteor-extend/usercenter-extend/assets/css/uc.min.css%3Fver=1729592901.css' type='text/css' media='all' />
+<link rel='stylesheet' id='kz-userlogin-css' href='../wp-content/uploads/meteor-extend/userlogin-extend/assets/css/login.min.css%3Fver=1.0.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-swiper-css' href='../wp-content/themes/meteorpro/assets/css/swiper-bundle.min.css%3Fver=2.2.1.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-icons-css' href='https://at.alicdn.com/t/c/font_1989294_g60v0fz2ljj.css?ver=2.2.1' type='text/css' media='all' />
+<script type="text/javascript" src="../wp-includes/js/jquery/jquery.min.js%3Fver=3.7.1" id="jquery-core-js"></script>
+<script type="text/javascript" src="../wp-includes/js/jquery/jquery-migrate.min.js%3Fver=3.4.1" id="jquery-migrate-js"></script>
+<script type="text/javascript" src="../wp-content/plugins/apoyl-weixinshare/public/js/jweixin-1.6.0.js%3Fver=2.7.0" id="apoyl-weixinshare-js"></script>
+<link rel="canonical" href="index.html" />
+<meta name="generator" content="Elementor 3.24.7; features: e_font_icon_svg, additional_custom_breakpoints, e_optimized_control_loading, e_element_cache; settings: css_print_method-external, google_font-enabled, font_display-swap">
+			<style>
+				.e-con.e-parent:nth-of-type(n+4):not(.e-lazyloaded):not(.e-no-lazyload),
+				.e-con.e-parent:nth-of-type(n+4):not(.e-lazyloaded):not(.e-no-lazyload) * {
+					background-image: none !important;
+				}
+				@media screen and (max-height: 1024px) {
+					.e-con.e-parent:nth-of-type(n+3):not(.e-lazyloaded):not(.e-no-lazyload),
+					.e-con.e-parent:nth-of-type(n+3):not(.e-lazyloaded):not(.e-no-lazyload) * {
+						background-image: none !important;
+					}
+				}
+				@media screen and (max-height: 640px) {
+					.e-con.e-parent:nth-of-type(n+2):not(.e-lazyloaded):not(.e-no-lazyload),
+					.e-con.e-parent:nth-of-type(n+2):not(.e-lazyloaded):not(.e-no-lazyload) * {
+						background-image: none !important;
+					}
+				}
+			</style>
+			<link rel="icon" href="../wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-32x32.png" sizes="32x32" />
+<link rel="icon" href="../wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="../wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-180x180.png" />
+<meta name="msapplication-TileImage" content="https://yowe.cc/wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-270x270.png" />
+</head>
+
+<body class="post-template-default single single-post postid-898 single-format-standard wp-custom-logo cxtheme-body overflow-y-scroll cxtheme-width-theme elementor-default elementor-kit-999" x-data="xhData" :data-bs-theme="darkMode ? 'dark' : ''" :class="{'dark': darkMode}">
+        <div class="site-wrapper navfixed">
+        <header class="header-s1" :class="{'onfixed' : searchData.Popup}" id="header-s1">
+            <div class="headnav">
+                <div class="container-xl h-container hwdiy">
+                    <div class="cxlogo">
+                                                <a href="../index.html" aria-label="哟喂">
+                            <img src="../wp-content/uploads/2024/10/yowe320.png" alt="哟喂" class="c-light" width="320" height="120"/>
+                            <img src="../wp-content/uploads/2024/10/yowe320.png" alt="哟喂" class="c-dark" width="320" height="120"/>
+                        </a>
+                    </div>
+                    <nav class="head-menu d-lg-flex navalign-left">
+                        <ul id="menu-main-menu" class="navbar-nav">
+                        <li class="menu-item"><a href="http://yowe.cc/">首页</a></li>
+<li class="menu-item"><a href="../category/科技资讯/index.html">科技资讯</a></li>
+<li class="menu-item menu-item-has-children"><a href="../category/企业通用/index.html">企业通用 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/电子商务/index.html">电子商务</a></li>
+	<li class="menu-item"><a href="../category/智慧农业/index.html">智慧农业</a></li>
+	<li class="menu-item"><a href="../category/健康医疗/index.html">健康医疗</a></li>
+	<li class="menu-item"><a href="../category/多媒体/index.html">多媒体</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/人工智能/index.html">人工智能 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/人工智能/aigc/index.html">AIGC</a></li>
+	<li class="menu-item"><a href="../category/人工智能/多智体/index.html">多智体</a></li>
+	<li class="menu-item"><a href="../category/人工智能/数据标注/index.html">数据标注</a></li>
+	<li class="menu-item"><a href="../category/人工智能/智能应用/index.html">智能应用</a></li>
+	<li class="menu-item"><a href="../category/人工智能/机器学习/index.html">机器学习</a></li>
+	<li class="menu-item"><a href="../category/人工智能/自然语言处理/index.html">自然语言处理</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/工业物联/index.html">工业物联 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/工业物联/pcb/index.html">PCB</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工业视觉/index.html">工业视觉</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工控仿真/index.html">工控仿真</a></li>
+	<li class="menu-item"><a href="../category/工业物联/数控机床/index.html">数控机床</a></li>
+	<li class="menu-item"><a href="../category/工业物联/无人机/index.html">无人机</a></li>
+	<li class="menu-item"><a href="../category/工业物联/物联网/index.html">物联网</a></li>
+	<li class="menu-item"><a href="../category/工业物联/电路设计/index.html">电路设计</a></li>
+	<li class="menu-item"><a href="../category/工业物联/自动驾驶/index.html">自动驾驶</a></li>
+</ul>
+</li>
+<li class="menu-item current-post-ancestor menu-item-has-children"><a href="../category/开发运维/index.html">开发运维 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/开发运维/云计算/index.html">云计算</a></li>
+	<li class="menu-item"><a href="../category/开发运维/前端开发/index.html">前端开发</a></li>
+	<li class="menu-item"><a href="../category/开发运维/后端开发/index.html">后端开发</a></li>
+	<li class="menu-item"><a href="../category/开发运维/客户端/index.html">客户端</a></li>
+	<li class="menu-item"><a href="../category/开发运维/嵌入式/index.html">嵌入式</a></li>
+	<li class="menu-item"><a href="../category/开发运维/开发工具/index.html">开发工具</a></li>
+	<li class="menu-item current-post-ancestor current-menu-parent"><a href="../category/开发运维/数据库/index.html">数据库</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item"><a href="../category/金融科技/index.html">金融科技</a></li>
+<li class="menu-item"><a href="../category/工具软件/index.html">工具软件</a></li>
+                        </ul>
+                    </nav>
+                    <div class="header-r" style="--scale:1;--srcolor:#ac44da">
+                        <ul class="h-btnbox sm-cnone d-flex gap-1">
+                            <li class="list-inline-item">
+                                <a href="../ranking/index.html" target="_blank" aria-label="Ranking">
+                                    <i class="cxicon cxicon-ranking me-0"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript:;" @click="darkMode = !darkMode;localStorage.setItem('darkMode', darkMode);" aria-label="Mode Switch">
+                                    <i class="cxicon cxicon-sunlight me-0" :class="{'d-none':!darkMode}"></i>
+                                    <i class="cxicon cxicon-moon me-0" :class="{'d-none':darkMode}"></i>
+                                </a>
+                            </li> 
+                        </ul>
+                        <div class="h-buttons d-flex">
+                            <button type="button" class="search-icon btn-default icon-button" :class="{'active':searchData.Popup}" @click="searchData.searchbtnClick()" title="Search Btn">
+                                <i class="cxicon cxicon-error me-0 anim"></i>
+                                <i class="cxicon cxicon-search me-0 anim"></i>
+                            </button>
+                            <!-- 移动端菜单 -->
+                            <button type="button" class="search btn-default icon-button d-lg-none" @click="moibleMenu = popData.bgShow = true" title="Menu Btn">
+                                <i class="cxicon cxicon-menu3 me-0"></i>
+                            </button>
+                            <!-- menu.end -->
+                                                    </div>
+                    </div>
+
+                </div>
+            </div>            
+        </header><!-- header.end-->
+        <!-- Moible Nav -->
+        <div class="mobile-navbox anim" :class="{'visible': moibleMenu}">
+            <button type="button" class="btn-close" aria-label="Close" @click="popData.bgShow = moibleMenu = false"><i class="cxicon cxicon-caidanshouqi"></i></button>
+            <div class="m-menulogo p-4 pt-3"></div>
+            <div class="m-navbox p-4 pt-0">
+                <ul id="moible-menu" class="m-nav pe-4">
+                <li class="menu-item"><a href="http://yowe.cc/">首页</a></li>
+<li class="menu-item"><a href="../category/科技资讯/index.html">科技资讯</a></li>
+<li class="menu-item menu-item-has-children"><a href="../category/企业通用/index.html">企业通用 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/电子商务/index.html">电子商务</a></li>
+	<li class="menu-item"><a href="../category/智慧农业/index.html">智慧农业</a></li>
+	<li class="menu-item"><a href="../category/健康医疗/index.html">健康医疗</a></li>
+	<li class="menu-item"><a href="../category/多媒体/index.html">多媒体</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/人工智能/index.html">人工智能 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/人工智能/aigc/index.html">AIGC</a></li>
+	<li class="menu-item"><a href="../category/人工智能/多智体/index.html">多智体</a></li>
+	<li class="menu-item"><a href="../category/人工智能/数据标注/index.html">数据标注</a></li>
+	<li class="menu-item"><a href="../category/人工智能/智能应用/index.html">智能应用</a></li>
+	<li class="menu-item"><a href="../category/人工智能/机器学习/index.html">机器学习</a></li>
+	<li class="menu-item"><a href="../category/人工智能/自然语言处理/index.html">自然语言处理</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/工业物联/index.html">工业物联 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/工业物联/pcb/index.html">PCB</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工业视觉/index.html">工业视觉</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工控仿真/index.html">工控仿真</a></li>
+	<li class="menu-item"><a href="../category/工业物联/数控机床/index.html">数控机床</a></li>
+	<li class="menu-item"><a href="../category/工业物联/无人机/index.html">无人机</a></li>
+	<li class="menu-item"><a href="../category/工业物联/物联网/index.html">物联网</a></li>
+	<li class="menu-item"><a href="../category/工业物联/电路设计/index.html">电路设计</a></li>
+	<li class="menu-item"><a href="../category/工业物联/自动驾驶/index.html">自动驾驶</a></li>
+</ul>
+</li>
+<li class="menu-item current-post-ancestor menu-item-has-children"><a href="../category/开发运维/index.html">开发运维 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/开发运维/云计算/index.html">云计算</a></li>
+	<li class="menu-item"><a href="../category/开发运维/前端开发/index.html">前端开发</a></li>
+	<li class="menu-item"><a href="../category/开发运维/后端开发/index.html">后端开发</a></li>
+	<li class="menu-item"><a href="../category/开发运维/客户端/index.html">客户端</a></li>
+	<li class="menu-item"><a href="../category/开发运维/嵌入式/index.html">嵌入式</a></li>
+	<li class="menu-item"><a href="../category/开发运维/开发工具/index.html">开发工具</a></li>
+	<li class="menu-item current-post-ancestor current-menu-parent"><a href="../category/开发运维/数据库/index.html">数据库</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item"><a href="../category/金融科技/index.html">金融科技</a></li>
+<li class="menu-item"><a href="../category/工具软件/index.html">工具软件</a></li>
+                </ul>
+            </div>
+            <div class="m-btnbox p-4">
+                <ul class="h-btnbox">
+                    <li class="list-inline-item">
+                        <a href="index.html#" target="_blank" aria-label="Msg">
+                            <i class="cxicon cxicon-xiaoxi"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="javascript:;" @click="darkMode = !darkMode;localStorage.setItem('darkMode', darkMode);"  aria-label="Mode Switch">
+                            <i class="cxicon cxicon-sunlight"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- MN.end -->
+        
+
+        <main class="main-container" role="main"><div class="banner trem-banner mb-4">
+    <div class="container-xl">
+        
+            <nav class="breadcrumbs " aria-label="Breadcrumb Nav">
+                <ol class="breadcrumb flex-nowrap">
+                
+        <li class="item-home flex-shrink-0">
+            <a  href="../index.html" title="哟喂">
+                <span>首页</span>
+            </a>
+        </li>
+
+        <li class="item-category flex-shrink-0">
+            <a  href="../category/开发运维/数据库/index.html" title="数据库">
+                <span>数据库</span>
+            </a>
+        </li>
+
+        <li class="item-current line-one pe-4">
+            <a  href="index.html" title="MySQL 优化都有哪些 技巧？">
+                <span>MySQL 优化都有哪些 技巧？</span>
+            </a>
+        </li>
+                </ol>
+            </nav>
+                </div>
+</div>
+<!-- 3 -->
+<section class="wi widget-coltow" x-data="Xh_Postmeta">
+    <div class="container-xl">
+        <div class="row cxrow">
+            <div class="col-left">
+                <div class="rowleft">
+                    <div class="main-content pe-xl-4">
+                                <article class="post is-single post-content status-publish">
+            <!-- 文章标题 -->
+            <header class="post-header">
+                <h1 class="post-title mt-3 mb-4 fs-2">MySQL 优化都有哪些 技巧？</h1><div class="article-meta">
+<ul class="meta-itembox">
+<li class="list-inline-item"><a class="author me-0" href="../author/yowe/index.html"><figure class="figure-avatar userid-1"><img alt='' src='../wp-content/themes/meteorpro/assets/images/lazy.png' data-src='/wp-content/uploads/userfigure/avatar-yowe.webp?v=1729591745' srcset='../wp-content/uploads/userfigure/avatar-yowe.webp%3Fv=1729591745 2x' class='lozad avatar avatar-30 photo avatar-default' height='30' width='30' decoding='async'/></figure>哟喂</a></li>
+<li class="list-inline-item"><a href="../category/开发运维/数据库/index.html" rel="category tag">数据库</a></li>
+<li class="list-inline-item">2024-10-22</li>
+</ul>
+</div>            </header>
+                        <!-- 文章正文 -->
+            <div class="article-body mb-4">
+                <section style="font-size: 16px; color: black; padding-right: 10px; padding-left: 10px; line-height: 1.6; letter-spacing: 0px; word-break: break-word; overflow-wrap: break-word; text-align: left; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; margin-bottom: 0px;" data-tool="mdnice编辑器" data-website="https://www.mdnice.com">
+<p style="-webkit-tap-highlight-color: transparent; margin-bottom: 0px; padding-top: 8px; padding-bottom: 8px; outline: 0px; color: #000000; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 16px; letter-spacing: normal; text-align: left; text-wrap: wrap; background-color: #ffffff; line-height: 26px; visibility: visible;" data-tool="mdnice编辑器">面试官如果问你：你会从哪些维度进行MySQL性能优化？你会怎么回答？</p>
+<p style="-webkit-tap-highlight-color: transparent; margin-bottom: 0px; padding-top: 8px; padding-bottom: 8px; outline: 0px; color: #000000; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 16px; letter-spacing: normal; text-align: left; text-wrap: wrap; background-color: #ffffff; line-height: 26px; visibility: visible;" data-tool="mdnice编辑器">所谓的性能优化，一般针对的是MySQL查询的优化。既然是优化查询，我们自然要先知道查询操作要经过哪些环节，然后思考可以在哪些环节进行优化。</p>
+<p style="-webkit-tap-highlight-color: transparent; margin-bottom: 0px; padding-top: 8px; padding-bottom: 8px; outline: 0px; color: #000000; font-family: Optima-Regular, Optima, PingFangSC-light, PingFangTC-light, 'PingFang SC', Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-size: 16px; letter-spacing: normal; text-align: left; text-wrap: wrap; background-color: #ffffff; line-height: 26px; visibility: visible;" data-tool="mdnice编辑器">下面从5个角度介绍一下MySQL优化的一些策略。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-6190823bc4e9576893a7842a1cec9945.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;"></figcaption><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;"><span style="color: #48b378; font-size: 22px; font-weight: bold; letter-spacing: 0px;">1. 连接配置优化</span></figcaption></figure>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">处理连接是MySQL客户端和MySQL服务端亲热的第一步，第一步都迈不好，也就别谈后来的故事了。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">既然连接是双方的事情，我们自然从服务端和客户端两个方面来进行优化喽。</p>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">1.1 服务端配置</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">服务端需要做的就是尽可能地多接受客户端的连接，或许你遇到过<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">error 1040: Too many connections</code>的错误？就是服务端的胸怀不够宽广导致的，格局太小！</p>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-eb575da0b37c044e7ed6d3f1859fb9f0.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">感谢媳妇儿给画的图</figcaption></figure>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">我们可以从两个方面解决连接数不够的问题：</p>
+<ol class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">增加可用连接数，修改环境变量<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">max_connections</code>，默认情况下服务端的最大连接数为<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">151</code>个</section>
+</li>
+</ol>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">mysql&gt; show variables like 'max_connections';
++-----------------+-------+
+| Variable_name   | Value |
++-----------------+-------+
+| max_connections | 151   |
++-----------------+-------+
+1 row in set (0.01 sec)
+</code></pre>
+<ol class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" start="2" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">及时释放不活动的连接，系统默认的客户端超时时间是28800秒（8小时），我们可以把这个值调小一点</section>
+</li>
+</ol>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">mysql&gt; show variables like 'wait_timeout';
++---------------+-------+
+| Variable_name | Value |
++---------------+-------+
+| wait_timeout  | 28800 |
++---------------+-------+
+1 row in set (0.01 sec)
+</code></pre>
+<blockquote style="border-top: none; border-right: none; border-bottom: none; font-size: 0.9em; overflow: auto; color: #6a737d; padding: 10px 10px 10px 20px; margin-bottom: 20px; margin-top: 20px; border-left-color: #35b378; background: #fbf9fd;" data-tool="mdnice编辑器">
+<p style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; color: black; line-height: 26px;">MySQL有非常多的配置参数，并且大部分参数都提供了默认值，默认值是MySQL作者经过精心设计的，完全可以满足大部分情况的需求，不建议在不清楚参数含义的情况下贸然修改。</p>
+</blockquote>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">1.2 客户端优化</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">客户端能做的就是尽量减少和服务端建立连接的次数，已经建立的连接能凑合用就凑合用，别每次执行个SQL语句都创建个新连接，服务端和客户端的资源都吃不消啊。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">解决的方案就是使用<strong>连接池</strong>来复用连接。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">常见的数据库连接池有<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">DBCP</code>、<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">C3P0</code>、阿里的<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">Druid</code>、<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">Hikari</code>，前两者用得很少了，后两者目前如日中天。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">但是需要注意的是连接池并不是越大越好，比如<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">Druid</code>的默认最大连接池大小是8，<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">Hikari</code>默认最大连接池大小是10，盲目地加大连接池的大小，系统执行效率反而有可能降低。为什么？</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">对于每一个连接，服务端会创建一个单独的线程去处理，连接数越多，服务端创建的线程自然也就越多。而线程数超过CPU个数的情况下，CPU势必要通过分配时间片的方式进行线程的上下文切换，频繁的上下文切换会造成很大的性能开销。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">Hikari官方给出了一个<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">PostgreSQL</code>数据库连接池大小的建议值公式，<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">CPU核心数*2+1</code>。假设服务器的CPU核心数是4，把连接池设置成9就可以了。这种公式在一定程度上对其他数据库也是适用的，大家面试的时候可以吹一吹。</p>
+<h2 style="min-height: 32px; line-height: 28px; border-bottom: 1px solid #48b378; border-top-color: #48b378; border-right-color: #48b378; border-left-color: #48b378; font-size: 22px; margin: 1em auto; padding-top: 0.5em; padding-bottom: 0.5em; text-align: center; width: 85%; font-weight: bold; display: flex; flex-direction: column; justify-content: center;" data-tool="mdnice编辑器"><span style="color: #48b378;">2. 架构优化</span></h2>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">2.1 使用缓存</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">系统中难免会出现一些比较慢的查询，这些查询要么是数据量大，要么是查询复杂（关联的表多或者是计算复杂），使得查询会长时间占用连接。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">如果这种数据的实效性不是特别强（不是每时每刻都会变化，例如每日报表），我们可以把此类数据放入缓存系统中，在数据的缓存有效期内，直接从缓存系统中获取数据，这样就可以减轻数据库的压力并提升查询效率。</p>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-47d583c02e4a066c6f8f27b437fde5c3.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">缓存的使用</figcaption></figure>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">2.2 读写分离（集群、主从复制）</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">项目的初期，数据库通常都是运行在一台服务器上的，用户的所有读写请求会直接作用到这台数据库服务器，单台服务器承担的并发量毕竟是有限的。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">针对这个问题，我们可以同时使用多台数据库服务器，将其中一台设置为为小组长，称之为<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">master</code>节点，其余节点作为组员，叫做<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">slave</code>。用户写数据只往<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">master</code>节点写，而读的请求分摊到各个<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">slave</code>节点上。这个方案叫做<strong>读写分离</strong>。给组长加上组员组成的小团体起个名字，叫<strong>集群</strong>。</p>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-a114e1452b5b67ae728ce6355f355217.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">这就是集群</figcaption></figure>
+<blockquote style="border-top: none; border-right: none; border-bottom: none; font-size: 0.9em; overflow: auto; color: #6a737d; padding: 10px 10px 10px 20px; margin-bottom: 20px; margin-top: 20px; border-left-color: #35b378; background: #fbf9fd;" data-tool="mdnice编辑器">
+<p style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; color: black; line-height: 26px;">注：很多开发者不满<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">master-slave</code>这种具有侵犯性的词汇（因为他们认为会联想到种族歧视、黑人奴隶等），所以发起了一项更名运动。</p>
+<p style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; color: black; line-height: 26px;">受此影响MySQL也会逐渐停用<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">master</code>、<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">slave</code>等术语，转而用<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">source</code>和<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">replica</code>替代，大家碰到的时候明白即可。</p>
+</blockquote>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">使用集群必然面临一个问题，就是多个节点之间怎么保持数据的一致性。毕竟写请求只往<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">master</code>节点上发送了，只有<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">master</code>节点的数据是最新数据，怎么把对<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">master</code>节点的写操作也同步到各个<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">slave</code>节点上呢？</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器"><strong>主从复制</strong>技术来了！我在<a style="color: #1e6bb8; overflow-wrap: break-word; font-weight: bold; border-bottom: 1px solid #1e6bb8;" href="https://mp.weixin.qq.com/s?__biz=MzI1MDU0MTc2MQ==&amp;mid=2247484093&amp;idx=1&amp;sn=f0fb512d536701c3e0ecdbf330fd6f9d&amp;chksm=e981e113def668058493e9102039b45034312946326fca9906744615b4547a364aa7bc445c16&amp;token=795558921&amp;lang=zh_CN&amp;scene=21#wechat_redirect" data-linktype="2">一条SQL更新语句是如何执行的？</a>中粗浅地介绍了一下binlog日志，我直接搬过来了。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器"><code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">binlog</code>是实现MySQL主从复制功能的核心组件。<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">master</code>节点会将所有的写操作记录到binlog中，<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">slave</code>节点会有专门的I/O线程读取<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">master</code>节点的binlog，将写操作同步到当前所在的<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">slave</code>节点。</p>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-9ca9d2e204638ae1a59bb4caec8dd14a.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">主从复制</figcaption></figure>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">这种集群的架构对减轻主数据库服务器的压力有非常好的效果，但是随着业务数据越来越多，如果某张表的数据量急剧增加，单表的查询性能就会大幅下降，而这个问题是读写分离也无法解决的，毕竟所有节点存放的是一模一样的数据啊，单表查询性能差，说的自然也是所有节点性能都差。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">这时我们可以把单个节点的数据分散到多个节点上进行存储，这就是<strong>分库分表</strong>。</p>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">2.3 分库分表</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">分库分表中的节点的含义比较宽泛，要是把数据库作为节点，那就是分库；如果把单张表作为节点，那就是分表。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">大家都知道分库分表分成垂直分库、垂直分表、水平分库和水平分表，但是每次都记不住这些概念，我就给大家详细说一说，帮助大家理解。</p>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">2.3.1 垂直分库</h4>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-3ff3ac98367b4431552736ec0b2bae04.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">垂直分库</figcaption></figure>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">在单体数据库的基础上垂直切几刀，按照业务逻辑拆分成不同的数据库，这就是<strong>垂直分库</strong>啦。</p>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-356ad0991a1fe34559c37f9dbd0e15c6.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">垂直分库</figcaption></figure>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">2.3.2 垂直分表</h4>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-63416a21a44e7dea6f4d2a3e843b6f43.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">垂直分表</figcaption></figure>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">垂直分表就是在单表的基础上垂直切一刀（或几刀），将一个表的多个字短拆成若干个小表，这种操作需要根据具体业务来进行判断，通常会把经常使用的字段（热字段）分成一个表，不经常使用或者不立即使用的字段（冷字段）分成一个表，提升查询速度。</p>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-fa4bc4970851929f49e7fc099db4ac67.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">垂直分表</figcaption></figure>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">拿上图举例：通常情况下商品的详情信息都比较长，而且查看商品列表时往往不需要立即展示商品详情（一般都是点击详情按钮才会进行显示），而是会将商品更重要的信息（价格等）展示出来，按照这个业务逻辑，我们将原来的商品表做了垂直分表。</p>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">2.3.3 水平分表</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">把单张表的数据按照一定的规则（行话叫分片规则）保存到多个数据表上，横着给数据表来一刀（或几刀），就是<strong>水平分表</strong>了。</p>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-57680e76451fd764d75ec4cd07d6f7e9.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">水平分表</figcaption></figure>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-a31336251b9463639646f4e98235d046.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">水平分表</figcaption></figure>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">2.3.4 水平分库</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器"><strong>水平分库</strong>就是对单个数据库水平切一刀，往往伴随着水平分表。</p>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-b8ed1c7c5b7b8b10d84ccf03cdceb1a7.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">水平分库</figcaption></figure>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-7cb801ccb27abe239c2bf4e2f0367a3e.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">水平分库</figcaption></figure>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">2.3.5 总结</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器"><strong>水平分，主要是为了解决存储的瓶颈；垂直分，主要是为了减轻并发压力。</strong></p>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">2.4 消息队列削峰</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">通常情况下，用户的请求会直接访问数据库，如果同一时刻在线用户数量非常庞大，极有可能压垮数据库（参考明星出轨或公布恋情时微博的状态）。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">这种情况下可以通过使用消息队列降低数据库的压力，不管同时有多少个用户请求，先存入消息队列，然后系统有条不紊地从消息队列中消费请求。</p>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-c13ebceb30e4b03dabf910bb0f21ab9f.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">队列削峰</figcaption></figure>
+<h2 style="min-height: 32px; line-height: 28px; border-bottom: 1px solid #48b378; border-top-color: #48b378; border-right-color: #48b378; border-left-color: #48b378; font-size: 22px; margin: 1em auto; padding-top: 0.5em; padding-bottom: 0.5em; text-align: center; width: 85%; font-weight: bold; display: flex; flex-direction: column; justify-content: center;" data-tool="mdnice编辑器"><span style="color: #48b378;">3. 优化器——SQL分析与优化</span></h2>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">处理完连接、优化完缓存等架构的事情，SQL查询语句来到了解析器和优化器的地盘了。在这一步如果出了任何问题，那就只能是SQL语句的问题了。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">只要你的语法不出问题，解析器就不会有问题。此外，为了防止你写的SQL运行效率低，优化器会自动做一些优化，但如果实在是太烂，优化器也救不了你了，只能眼睁睁地看着你的SQL查询沦为<strong>慢查询</strong>。</p>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">3.1 慢查询</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器"><strong>慢查询</strong>就是执行地很慢的查询（这句话说得跟废话似的。。。），只有知道MySQL中有哪些慢查询我们才能针对性地进行优化。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">因为开启慢查询日志是有性能代价的，因此MySQL默认是关闭慢查询日志功能，使用以下命令查看当前慢查询状态</p>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">mysql&gt; show variables like 'slow_query%';
++---------------------+--------------------------------------+
+| Variable_name       | Value                                |
++---------------------+--------------------------------------+
+| slow_query_log      | OFF                                  |
+| slow_query_log_file | /var/lib/mysql/9e74f9251f6c-slow.log |
++---------------------+--------------------------------------+
+2 rows in set (0.00 sec)
+</code></pre>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器"><code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">slow_query_log</code>表示当前慢查询日志是否开启，<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">slow_query_log_file</code>表示慢查询日志的保存位置。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">除了上面两个变量，我们还需要确定“慢”的指标是什么，即执行超过多长时间才算是慢查询，默认是<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">10S</code>，如果改成<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">0</code>的话就是记录所有的SQL。</p>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">mysql&gt; show variables like '%long_query%';
++-----------------+-----------+
+| Variable_name   | Value     |
++-----------------+-----------+
+| long_query_time | 10.000000 |
++-----------------+-----------+
+1 row in set (0.00 sec)
+</code></pre>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">3.1.1 打开慢日志</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">有两种打开慢日志的方式</p>
+<ol class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">修改配置文件<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">my.cnf</code></section>
+</li>
+</ol>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">此种修改方式系统重启后依然有效</p>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;"><span style="color: #5c6370; font-style: italic; line-height: 26px;"># 是否开启慢查询日志</span>
+slow_query_log=ON
+<span style="color: #5c6370; font-style: italic; line-height: 26px;"># </span>
+long_query_time=2
+slow_query_log_file=/var/lib/mysql/slow.log
+</code></pre>
+<ol class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" start="2" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">动态修改参数（重启后失效）</section>
+</li>
+</ol>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">mysql&gt; set @@global.slow_query_log=1;
+Query OK, 0 rows affected (0.06 sec)
+
+mysql&gt; set @@global.long_query_time=2;
+Query OK, 0 rows affected (0.00 sec)
+</code></pre>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">3.1.2 慢日志分析</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">MySQL不仅为我们保存了慢日志文件，还为我们提供了慢日志查询的工具<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">mysqldumpslow</code>，为了演示这个工具，我们先构造一条慢查询：</p>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">mysql&gt; SELECT sleep(5);
+</code></pre>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">然后我们查询用时最多的1条慢查询：</p>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">[root@iZ2zejfuakcnnq2pgqyzowZ ~]<span style="color: #5c6370; font-style: italic; line-height: 26px;"># mysqldumpslow -s t -t 1 -g 'select' /var/lib/mysql/9e74f9251f6c-slow.log</span>
+
+Reading mysql slow query <span style="color: #e6c07b; line-height: 26px;">log</span> from /var/lib/mysql/9e74f9251f6c-slow.log
+Count: 1  Time=10.00s (10s)  Lock=0.00s (0s)  Rows=1.0 (1), root[root]@localhost
+  SELECT sleep(N)
+</code></pre>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">其中，</p>
+<ul class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">Count</strong>：表示这个SQL执行的次数</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">Time</strong>：表示执行的时间，括号中的是累积时间</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">Locks</strong>：表示锁定的时间，括号中的是累积时间</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">Rows</strong>：表示返回的记录数，括号中的是累积数</section>
+</li>
+</ul>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">更多关于<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">mysqldumpslow</code>的使用方式，可以查阅官方文档，或者执行<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">mysqldumpslow --help</code>寻求帮助。</p>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">3.2 查看运行中的线程</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">我们可以运行<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">show full processlist</code>查看MySQL中运行的所有线程，查看其状态和运行时间，找到不顺眼的，直接kill。</p>
+<figure style="margin-top: 10px; margin-bottom: 10px; display: flex; flex-direction: column; justify-content: center; align-items: center;" data-tool="mdnice编辑器"><img decoding="async" src="../wp-content/uploads/2024/10/frc-8b389428193ac0e2fd95966c298c087c.png" /><figcaption style="margin-top: 5px; text-align: center; color: #888; font-size: 14px;">image-20220405182328247</figcaption></figure>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">其中，</p>
+<ul class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">Id</strong>：线程的唯一标志，可以使用Id杀死指定线程</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">User</strong>：启动这个线程的用户，普通账户只能查看自己的线程</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">Host</strong>：哪个ip和端口发起的连接</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">db</strong>：线程操作的数据库</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">Command</strong>：线程的命令</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">Time</strong>：操作持续时间，单位秒</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">State</strong>：线程的状态</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">Info</strong>：SQL语句的前100个字符</section>
+</li>
+</ul>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">3.3 查看服务器运行状态</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">使用<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">SHOW STATUS</code>查看MySQL服务器的运行状态，有<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">session</code>和<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">global</code>两种作用域，一般使用<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">like+通配符</code>进行过滤。</p>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">-- 查看select的次数
+mysql&gt; SHOW GLOBAL STATUS LIKE 'com_select';
++---------------+--------+
+| Variable_name | Value  |
++---------------+--------+
+| Com_select    | 168241 |
++---------------+--------+
+1 row in set (0.05 sec)
+</code></pre>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">3.4 查看存储引擎运行信息</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器"><code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">SHOW ENGINE</code>用来展示存储引擎的当前运行信息，包括事务持有的表锁、行锁信息；事务的锁等待情况；线程信号量等待；文件IO请求；Buffer pool统计信息等等数据。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">例如：</p>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">SHOW ENGINE INNODB STATUS;
+</code></pre>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">上面这条语句可以展示innodb存储引擎的当前运行的各种信息，大家可以据此找到MySQL当前的问题，限于篇幅不在此意义说明其中信息的含义，大家只要知道MySQL提供了这样一个监控工具就行了，等到需要的时候再来用就好。</p>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">3.5 EXPLAIN执行计划</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">通过慢查询日志我们可以知道哪些SQL语句执行慢了，可是为什么慢？慢在哪里呢？</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">MySQL提供了一个执行计划的查询命令<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">EXPLAIN</code>，通过此命令我们可以查看SQL执行的计划，所谓执行计划就是：优化器会不会优化我们自己书写的SQL语句（比如外连接改内连接查询，子查询优化为连接查询&#8230;）、优化器针对此条SQL的执行对哪些索引进行了成本估算，并最终决定采用哪个索引（或者最终选择不用索引，而是全表扫描）、优化器对单表执行的策略是什么，等等等等。</p>
+<blockquote style="border-top: none; border-right: none; border-bottom: none; font-size: 0.9em; overflow: auto; color: #6a737d; padding: 10px 10px 10px 20px; margin-bottom: 20px; margin-top: 20px; border-left-color: #35b378; background: #fbf9fd;" data-tool="mdnice编辑器">
+<p style="font-size: 16px; padding-top: 8px; padding-bottom: 8px; color: black; line-height: 26px;">EXPLAIN在MySQL5.6.3之后也可以针对UPDATE、DELETE和INSERT语句进行分析，但是通常情况下我们还是用在SELECT查询上。</p>
+</blockquote>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">这篇文章主要是从宏观上多个角度介绍MySQL的优化策略，因此这里不详细说明<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">EXPLAIN</code>的细节，之后单独成篇。</p>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">3.6 SQL与索引优化</h3>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">3.6.1 SQL优化</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">SQL优化指的是SQL本身语法没有问题，但是有实现相同目的的更好的写法。比如：</p>
+<ul class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">使用小表驱动大表；用join改写子查询；or改成union</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">连接查询中，尽量减少驱动表的扇出（记录数），访问被驱动表的成本要尽量低，尽量在被驱动表的连接列上建立索引，降低访问成本；被驱动表的连接列最好是该表的主键或者是唯一二级索引列，这样被驱动表的成本会降到更低</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">大偏移量的limit，先过滤再排序</section>
+</li>
+</ul>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">针对最后一条举个简单的例子，下面两条语句能实现同样的目的，但是第二条的执行效率比第一条执行效率要高得多（存储引擎使用的是InnoDB），大家感受一下：</p>
+<pre style="margin-top: 10px; margin-bottom: 10px; border-radius: 5px; box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;" data-tool="mdnice编辑器"><code style="overflow-x: auto; padding: 16px; color: #abb2bf; display: -webkit-box; font-family: Operator Mono, Consolas, Monaco, Menlo, monospace; font-size: 12px; -webkit-overflow-scrolling: touch; padding-top: 15px; background: #282c34; border-radius: 5px;">-- 1. 大偏移量的查询
+mysql&gt; SELECT * FROM user_innodb LIMIT 9000000,10;
+Empty set (8.18 sec)
+
+-- 2.先过滤ID（因为ID使用的是索引），再limit
+mysql&gt; SELECT * FROM user_innodb WHERE id &gt; 9000000 LIMIT 10;
+Empty set (0.02 sec)
+</code></pre>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">3.6.2 索引优化</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">为慢查询创建适当的索引是个非常常见并且非常有效的方法，但是索引是否会被高效使用又是另一门学问了。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">我之前写过一篇<a style="color: #1e6bb8; overflow-wrap: break-word; font-weight: bold; border-bottom: 1px solid #1e6bb8;" href="https://mp.weixin.qq.com/s?__biz=MzI1MDU0MTc2MQ==&amp;mid=2247484338&amp;idx=1&amp;sn=f753421c70f0e436c040af9e969c3331&amp;chksm=e981e01cdef6690ae6e4bec7c92b436019f5f30e02f35524ca8e144a92b8aa743fc2c51d2c27&amp;token=1056536482&amp;lang=zh_CN&amp;scene=21#wechat_redirect" data-linktype="2">用好MySQL索引，你必须知道的一些事情 </a>，感兴趣的读者可以看一下。</p>
+<h2 style="min-height: 32px; line-height: 28px; border-bottom: 1px solid #48b378; border-top-color: #48b378; border-right-color: #48b378; border-left-color: #48b378; font-size: 22px; margin: 1em auto; padding-top: 0.5em; padding-bottom: 0.5em; text-align: center; width: 85%; font-weight: bold; display: flex; flex-direction: column; justify-content: center;" data-tool="mdnice编辑器"><span style="color: #48b378;">4. 存储引擎与表结构</span></h2>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">4.1 选择存储引擎</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">一般情况下，我们会选择MySQL默认的存储引擎存储引擎<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">InnoDB</code>，但是当对数据库性能要求精益求精的时候，存储引擎的选择也成为一个关键的影响因素。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">建议根据不同的业务选择不同的存储引擎，例如：</p>
+<ul class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">查询操作、插入操作多的业务表，推荐使用<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">MyISAM</code>；</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">临时表使用<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">Memory</code>；</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">并发数量大、更新多的业务选择使用<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">InnoDB</code>；</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">不知道选啥直接默认。</section>
+</li>
+</ul>
+<h3 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 20px;" data-tool="mdnice编辑器">4.2 优化字段</h3>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">字段优化的最终原则是：<strong>使用可以正确存储数据的最小的数据类型</strong>。</p>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">4.2.1 整数类型</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">MySQL提供了6种整数类型，分别是</p>
+<ul class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">tinyint</strong></section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">smallint</strong></section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">mediumint</strong></section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">int</strong></section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">integer</strong></section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;"><strong style="color: black;">bigint</strong></section>
+</li>
+</ul>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">不同的存储类型的最大存储范围不同，占用的存储的空间自然也不同。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">例如，是否被删除的标识，建议选用<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">tinyint</code>，而不是<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">bigint</code>。</p>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">4.2.2 字符类型</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">你是不是直接把所有字符串的字段都设置为<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">varchar</code>格式了？甚至怕不够，还会直接设置成<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">varchar(1024)</code>的长度？</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">如果不确定字段的长度，肯定是要选择<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">varchar</code>，但是<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">varchar</code>需要额外的空间来记录该字段目前占用的长度；因此如果字段的长度是固定的，尽量选用<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">char</code>，这会给你节约不少的内存空间。</p>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">4.2.3 非空</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">非空字段尽量设置成<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">NOT NULL</code>，并提供默认值，或者使用特殊值代替<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">NULL</code>。</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">因为<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">NULL</code>类型的存储和优化都会存在性能不佳的问题，具体原因在这里就不展开了。</p>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">4.2.4 不要用外键、触发器和视图功能</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">这也是「阿里巴巴开发手册」中提到的原则。原因有三个：</p>
+<ol class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">降低了可读性，检查代码的同时还得查看数据库的代码；</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">把计算的工作交给程序，数据库只做好存储的工作，并把这件事情做好；</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">数据的完整性校验的工作应该由开发者完成，而不是依赖于外键，一旦用了外键，你会发现测试的时候随便删点垃圾数据都变得异常艰难。</section>
+</li>
+</ol>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">4.2.5 图片、音频、视频存储</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">不要直接存储大文件，而是要存储大文件的访问地址。</p>
+<h4 style="margin-top: 30px; margin-bottom: 15px; font-weight: bold; font-size: 18px;" data-tool="mdnice编辑器">4.2.6 大字段拆分和数据冗余</h4>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器"><strong>大字段拆分</strong>其实就是前面说过的垂直分表，把不常用的字段或者数据量较大的字段拆分出去，避免列数过多和数据量过大，尤其是习惯编写<code style="font-size: 14px; overflow-wrap: break-word; padding: 2px 4px; border-radius: 4px; margin-right: 2px; margin-left: 2px; background-color: rgba(27, 31, 35, 0.05); font-family: 'Operator Mono', Consolas, Monaco, Menlo, monospace; word-break: break-all; color: #28ca71;">SELECT *</code>的情况下，列数多和数据量大导致的问题会被严重放大！</p>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器"><strong>字段冗余</strong>原则上不符合数据库设计范式，但是却非常有利于快速检索。比如，合同表中存储客户id的同时可以冗余存储客户姓名，这样查询时就不需要再根据客户id获取用户姓名了。因此针对业务逻辑适当做一定程度的冗余也是一种比较好的优化技巧。</p>
+<h2 style="min-height: 32px; line-height: 28px; border-bottom: 1px solid #48b378; border-top-color: #48b378; border-right-color: #48b378; border-left-color: #48b378; font-size: 22px; margin: 1em auto; padding-top: 0.5em; padding-bottom: 0.5em; text-align: center; width: 85%; font-weight: bold; display: flex; flex-direction: column; justify-content: center;" data-tool="mdnice编辑器"><span style="color: #48b378;">5. 业务优化</span></h2>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">严格来说，业务方面的优化已经不算是MySQL调优的手段了，但是业务的优化却能非常有效地减轻数据库访问压力，这方面一个典型例子就是淘宝，下面举几个简单例子给大家提供一下思路：</p>
+<ol class="list-paddingleft-1" style="margin-top: 8px; margin-bottom: 8px; padding-left: 25px;" data-tool="mdnice编辑器">
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">以往都是双11当晚开始买买买的模式，最近几年双11的预售战线越拉越长，提前半个多月就开始了，而且各种定金红包模式丛出不穷，这种方式叫做<strong style="color: black;">预售分流</strong>。这样做可以分流客户的服务请求，不必等到双十一的凌晨一股脑地集体下单；</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">双十一的凌晨你或许想查询当天之外的订单，但是却查询失败；甚至支付宝里的小鸡的口粮都被延迟发放了，这是一种<strong style="color: black;">降级策略</strong>，集结不重要的服务的计算资源，用来保证当前最核心的业务；</section>
+</li>
+<li>
+<section style="margin-top: 5px; margin-bottom: 5px; line-height: 26px; color: #010101;">双十一的时候支付宝极力推荐使用花呗支付，而不是银行卡支付，虽然一部分考量是提高软件粘性，但是另一方面，使用余额宝实际使用的阿里内部服务器，访问速度快，而使用银行卡，需要调用银行接口，相比之下操作要慢了许多。</section>
+</li>
+</ol>
+<p style="padding-top: 8px; padding-bottom: 8px; line-height: 26px;" data-tool="mdnice编辑器">
+<p style="-webkit-tap-highlight-color: transparent; outline: 0px; min-height: 24px; letter-spacing: 0.544px; white-space: normal; font-size: 16px; text-align: center; caret-color: #222222; text-size-adjust: inherit; font-family: system-ui, -apple-system, system-ui, 'Helvetica Neue', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif;"><span style="-webkit-tap-highlight-color: transparent; outline: 0px; font-weight: bolder; color: #888888; font-size: 11px; letter-spacing: 0.544px; word-spacing: 2px; caret-color: #000000; visibility: visible; font-family: 'Helvetica Neue', Helvetica, 'Hiragino Sans GB', 'Microsoft YaHei', Arial, sans-serif;">···········  END  ··············</span></p>
+<section style="-webkit-tap-highlight-color: transparent; margin-bottom: 0px; outline: 0px; font-family: 'PingFang SC', system-ui, -apple-system, 'system-ui', 'Helvetica Neue', 'Hiragino Sans GB', 'Microsoft YaHei UI', 'Microsoft YaHei', Arial, sans-serif; letter-spacing: 0.544px; text-wrap: wrap; color: #000000; font-size: 16px; text-align: left; background-color: #ffffff;"></section>
+</section>
+<p><a href="https://mp.weixin.qq.com/s/3CzSfqOb4HR-hfsWSc-KVQ">阅读原文</a></p>
+            </div>
+
+                    <!-- 底部元信息 -->
+        <div class="post-footmeta mb-5">
+            <div class="row d-flex align-items-center">
+                <div class="col-md-6 col-12">
+                    <div class="post-share justify-content-sm-start mb-3 mb-sm-0">
+                        <div class="post-btnmeta">
+                            <span class="post-like anim cursor-pointer" :class="postMeta.postLike_on ? 'text-auto' : ''" @click="_setlike"><i class="cxicon cxicon-zan-black"></i> <em style="font-style: normal" x-text="postMeta.postLike" x-show="postMeta.postLike !== 0"></em></span>
+                        </div>
+                        <i class="cxline-1"></i>
+                        <ul class="social-icons" x-data="{'postThumb':'/wp-content/uploads/2024/10/frc-6190823bc4e9576893a7842a1cec9945.png','postLink' : window.location.href, 'postTitle' : document.title}">
+                            <li class="list-inline-item">
+                                <a href="javascript:;" title="分享到微信" rel="noreferrer noopener nofollow" x-bind="weixinLink"><i class="cxicon cxicon-weixin"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript:;" title="分享到微博" rel="noreferrer noopener nofollow" x-bind="weiboLink"><i class="cxicon cxicon-weibo"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript:;" title="分享到QQ" rel="noreferrer noopener nofollow" x-bind="qqLink"><i class="cxicon cxicon-qq"></i></a>
+                            </li>
+                        </ul>
+                                <i class="cxline-1"></i>
+        <div class="post-btnmeta ttop-1">
+            <span class="post-collect fs-7 anim py-1 cursor-pointer" :class="postMeta.postCollect_on ? 'text-auto' : ''" @click="_setCollect"><i class="cxicon cxicon-collect-black me-1" style="--scale:1.3"></i><span x-text="postMeta.postCollect_on ? '已收藏' : '收藏'"></span></span>
+        </div>
+                            </div>
+                </div>
+                <div class="col-md-6 col-12 text-center text-md-end">
+                    <div class="tags">
+                        <a href="../tag/mysql/index.html" rel="tag">#mysql</a>                    </div>
+                </div>
+            </div>
+        </div>
+                <div class="about-author p-4 mb-5 flex-sm-row">
+            <div class="thumb"><a class="author" href="../author/yowe/index.html" title="哟喂"><figure class="figure-avatar userid-1"><img alt='' src='../wp-content/themes/meteorpro/assets/images/lazy.png' data-src='/wp-content/uploads/userfigure/avatar-yowe.webp?v=1729591745' srcset='../wp-content/uploads/userfigure/avatar-yowe.webp%3Fv=1729591745 2x' class='lozad avatar avatar-100 photo avatar-default' height='100' width='100' decoding='async'/></figure></a></div>            <div class="details ps-sm-4 mt-3 mt-sm-0 text-sm-start">
+                <div class="name fw-bold mb-2 fs-4"><a href="../author/yowe/index.html" title="文章作者 哟喂" rel="author">哟喂</a></div>
+                <p>为您推荐最优质的软件系统和最专业的技术服务</p>
+                            </div>
+        </div>
+                <div class="row nextprev-post-wrapper mb-5 wht-ade8">
+            <div class="col-md-6 col-12 mb-4 mb-sm-0">
+                <div class="nextprev-post prev">
+                    <span class="nextprev-text fw-semibold fs-7 opacity-75"> 上一篇</span>
+                    <h5 class="post-title fs-5 lh-base">
+                        <a href="../高级后端必备的-nginx相关知识/index.html" rel="prev">高级后端必备的 Nginx相关知识</a>                    </h5>
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="nextprev-post next text-sm-end">
+                    <span class="nextprev-text fw-semibold fs-7 opacity-75">下一篇</span>
+                    <h5 class="post-title fs-5 lh-base">
+                        <a href="../虚拟试衣whatsapp应用：通过flask和twilio实现在线服装试穿🤖/index.html" rel="next">虚拟试衣Whatsapp应用：通过Flask和Twilio实现在线服装试穿🤖</a>                    </h5>
+                </div>
+            </div>
+        </div>
+                <div class="mso nobg" x-data="xgPostdata">
+            <div class="module-tit item-center noborder">
+                <h3 style="font-size:1rem"><i class="cxline"></i>延伸阅读:</h3>
+                <p></p>
+                <div class="more-sort">
+                    <button type="button" class="btn btn-xsm btn-sort lh-1 opacity-75" :class="{'active':xgpostType == 'hot'}" @click="xgPostrand( 'hot' )">热度</button>  
+                    <i class="cxline-1 mx-1"></i>
+                    <button type="button" class="btn btn-xsm btn-sort lh-1 opacity-75" :class="{'active':xgpostType == 'new'}" @click="xgPostrand( 'new' )">时效</button>
+                </div>
+            </div>
+            <div class="module-content jsminHeight">
+                <div class="hotpl w-100" x-ref="xgpostHot" :class="{'active':xgpostType == 'hot'}">
+                    <div class="nonebox py-5"><div class="iconsvg"></div><p>暂无内容!</p></div>                </div>
+                <div class="newpl w-100" x-ref="xgpostNew" :class="{'active':xgpostType == 'new'}">
+                    <div class="d-flex justify-content-center mt-5 opacity-50" style="min-height: 300px;">
+                        <div class="spinner-border text-danger sbw-2" role="status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                </article>
+                            </div>
+                </div>
+            </div>
+            
+            <div class="col-right" id="sidebar">
+    <div class="rowright sidebar-sticky">
+        <aside class="side-area pb-3">
+            <div class="widget widget_block">
+<div class="block-introduction"><div style="background:linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);color:#fff" class="wp-block-meteor-introduction-block rounded py-2 px-3">
+<p class="has-text-align-center">开源大马,开源技术分享交流,为您推荐最优质的软件系统和最专业的技术支持</p>
+</div></div>
+</div><div class="widget widget_block"><div class="wp-widget-group__inner-blocks"></div></div><div class="widget widget_block"><h4 class="widgettitle mb-3 fs-5">热门分类<span class="hovershow text-auto anim ms-1"><i class="cxicon cxicon-daoxiang"></i></span></h4><div class="wp-widget-group__inner-blocks"><div class="block-termcloud d-flex flex-wrap fs-7 oneColor wp-block-meteor-tremcloud"><div class="cloud-item anim"><a href="../category/人工智能/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">人工智能</span></a></div><div class="cloud-item anim"><a href="../category/企业通用/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">企业通用</span></a></div><div class="cloud-item anim"><a href="../category/健康医疗/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">健康医疗</span></a></div><div class="cloud-item anim"><a href="../category/开发运维/后端开发/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">后端开发</span></a></div><div class="cloud-item anim"><a href="../category/多媒体/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">多媒体</span></a></div><div class="cloud-item anim"><a href="../category/开发运维/客户端/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">客户端</span></a></div><div class="cloud-item anim"><a href="../category/工具软件/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">工具软件</span></a></div><div class="cloud-item anim"><a href="../category/开发运维/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">开发运维</span></a></div><div class="cloud-item anim"><a href="../category/科技资讯/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">科技资讯</span></a></div><div class="cloud-item anim"><a href="../category/人工智能/自然语言处理/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">自然语言处理</span></a></div></div></div></div><div class="widget widget_block"><h4 class="widgettitle mb-3 fs-5">图片广告<span class="hovershow text-auto anim ms-1"><i class="cxicon cxicon-daoxiang"></i></span></h4><div class="wp-widget-group__inner-blocks">
+<figure class="wp-block-image size-full bordered"><img fetchpriority="high" decoding="async" width="800" height="498" src="../wp-content/uploads/2024/10/1630402246_829231.jpg" alt="" class="wp-image-819"/></figure>
+</div></div><div class="widget widget_block"><h4 class="widgettitle mb-3 fs-5">最新文章<span class="hovershow text-auto anim ms-1"><i class="cxicon cxicon-daoxiang"></i></span></h4><div class="wp-widget-group__inner-blocks">
+<div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained"><ul class="wp-block-latest-posts__list wp-block-latest-posts"><li><a class="wp-block-latest-posts__post-title" href="../这些良好的嵌入式软件编程习惯，建议掌握！/index.html">这些良好的嵌入式软件编程习惯，建议掌握！</a></li>
+<li><a class="wp-block-latest-posts__post-title" href="../一文看懂llm推理，ucl重磅解读openai-ο1的相关方法/index.html">一文看懂LLM推理，UCL重磅解读OpenAI ο1的相关方法</a></li>
+<li><a class="wp-block-latest-posts__post-title" href="../gradio-5-简化机器学习模型演示的工具-🤖/index.html">Gradio 5 ——简化机器学习模型演示的工具 🤖</a></li>
+<li><a class="wp-block-latest-posts__post-title" href="../跨平台远程桌面解决方案-rustdesk/index.html">跨平台远程桌面解决方案——RustDesk🤖</a></li>
+<li><a class="wp-block-latest-posts__post-title" href="../跨平台高效的本地文件传输工具-localsend/index.html">跨平台高效的本地文件传输工具——LocalSend🤖</a></li>
+</ul></div></div>
+</div></div><div class="widget widget_block"><h4 class="widgettitle mb-3 fs-5">图册展示<span class="hovershow text-auto anim ms-1"><i class="cxicon cxicon-daoxiang"></i></span></h4><div class="wp-widget-group__inner-blocks">
+<div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
+<figure class="wp-block-gallery has-nested-images columns-default is-cropped wp-block-gallery-2 is-layout-flex wp-block-gallery-is-layout-flex">
+<figure class="wp-block-image size-large"><img decoding="async" src="https://file.xhtheme.cn/xhimages/xhtheme-demo-27.jpeg" alt="" class="wp-image-63"/></figure>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" src="https://file.xhtheme.cn/xhimages/xhtheme-demo-38.webp" alt="" class="wp-image-78"/></figure>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" src="https://file.xhtheme.cn/xhimages/xhtheme-demo-39.webp" alt="" class="wp-image-60"/></figure>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" src="https://file.xhtheme.cn/xhimages/xhtheme-demo-41.webp" alt="" class="wp-image-57"/></figure>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" src="https://file.xhtheme.cn/xhimages/xhtheme-demo-25.jpeg" alt="" class="wp-image-40"/></figure>
+</figure>
+</div></div>
+</div></div><div class="widget widget_block"><h4 class="widgettitle mb-3 fs-5">标签云<span class="hovershow text-auto anim ms-1"><i class="cxicon cxicon-daoxiang"></i></span></h4><div class="wp-widget-group__inner-blocks"><div class="block-termcloud d-flex flex-wrap fs-7 oneColor wp-block-meteor-tremcloud"><div class="cloud-item anim"><a href="../tag/任务管理/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">任务管理</span></a></div><div class="cloud-item anim"><a href="../tag/员工管理/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">员工管理</span></a></div><div class="cloud-item anim"><a href="../tag/在线医生/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">在线医生</span></a></div><div class="cloud-item anim"><a href="../tag/嵌入式/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">嵌入式</span></a></div><div class="cloud-item anim"><a href="../tag/智慧家居/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">智慧家居</span></a></div><div class="cloud-item anim"><a href="../tag/物业管理/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">物业管理</span></a></div><div class="cloud-item anim"><a href="../tag/物联网/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">物联网</span></a></div><div class="cloud-item anim"><a href="../tag/监控系统/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">监控系统</span></a></div><div class="cloud-item anim"><a href="../tag/知识图谱/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">知识图谱</span></a></div><div class="cloud-item anim"><a href="../tag/语音转换/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">语音转换</span></a></div></div></div></div>        </aside>
+    </div>
+</div>        </div>
+    </div>
+</section>
+<!-- 3.end --></main><!-- main.end -->
+
+<footer class="footer-s1">
+    <div class="linebox bg-auto"></div>
+    <div class="foottop">
+        <div class="container-xl">
+            <div class="footmain-box">
+                <div class="aboutus_link"><a href="https://0060.my" target="_blank">0060</a><a href="https://www.icnma.com/" target="_blank">美熙科技说</a><a href="https://ambertaste.com/" target="_blank">安泊尔调料</a><a href="../about.html">关于我们</a></div><div class="footer-desc">免责声明：本网站部分内容由用户自行上传，如权利人发现存在误传其作品情形，请及时与本站联系。</div><div class="foot-copyright">哟喂 © 2024. All Rights Reserved.</div>            </div>
+        </div>
+    </div>
+</footer>
+<!-- 弹出层代码 -->
+<div class="popbg-box anim" :class="{visible: popData.bgShow,blackcolor: popData.bgBlack }" @click="_bgclose('bg')"></div>
+<div class="emon rounded" :class="{visible: popData.Emon,loading: popData.loadclass,mbemon: popData.mbemon}" :style="popData.popMwidth ? '--maxwidth:'+popData.popMwidth : ''">
+    <div class="emon-close" @click="_bgclose('btn')" _widese="574050"><i class="cxicon cxicon-error" style="--scale:.85"></i></div>
+    <div class="emon-title" x-show="popData.title" x-html="popData.title"></div>
+    <div class="emon-content" x-html="popData.content"></div>
+</div>
+
+<!-- 弹窗部分结束 -->
+<div class="search-popup anim" :class="{'visible': searchData.Popup}">
+    <div class="search-content anim" :class="{'top-lg-40':searchData.Inputtop}">
+        <div class="search-form-box">
+            <form class="d-flex search-form" method="get" @submit.prevent="searchData.searchFormSubmit($data)" action="../index.html">
+                <div class="d-flex w-100 justify-content-between align-items-center position-relative">
+                    <div class="search-inputbox flex-grow-1">
+                        <input class="form-control search-input py-2 py-lg-3 px-4 border-2 anim" @input.debounce.1000ms="searchData.searchFormSubmit($data)" x-model="searchData.formData.word" autocomplete="off" placeholder="搜索并按回车键..." type="text" name="s" aria-label="搜索">
+                    </div>
+                    <botton type="submit" class="submitbox position-absolute top-0 end-0 d-flex align-items-center px-4 h-100 opacity-50">
+                        <i class="cxicon cxicon-search" :class="{'d-none':searchData.loadIng}"></i>
+                        <span class="spinner-border spinner-border-sm spinner-b1" :class="{'d-none':!searchData.loadIng}"></span>
+                    </botton>
+                </div>
+            </form>
+        </div>   
+        <ul class="searchList anim pt-4" x-html="searchData.postList" x-show="!searchData.Inputtop && searchData.formData.word" x-transition :class="{'opacity-25':searchData.loadIng}"></ul>          
+    </div>
+</div>
+<!-- .end -->
+</div>
+<!--.sit-wrapper-->
+         <template x-ref="loginformtpl">
+            <div class="logintemplate" x-data="extendLoginData()">
+                <div class="position-relative z-1">
+                    <div class="head-login w-100 px-3 d-none" style="margin-top:10px;min-height:1px">
+                        <p class="fs-7 mb-0 text-center"><span class="sticky-color" style="--cbg-lightgradient:var(--cx-gradient-purple)"></span></p>
+                    </div>                  
+                    <div class="loginnone">暂无可用登录表单，请到后台完成配置！</div><div class="tip fs-6 text-center opacity-50 pt-2">用户成功登录即表示同意《<a href="index.html#">用户协议</a>》《<a href="index.html#">隐私政策</a>》！</div>              
+                </div>                
+            </div>
+        </template> 
+        <script>
+function apoyl_weixinshare_getMeta(){
+	var obj=document.getElementsByTagName('meta');
+	var desc='面试官如果问你：你会从哪些维度进行MySQL性能优化？你会怎么回答？所谓的性能优化，一般针对的是MySQL查询的优化。既然是优化查询，我们自然要先知道查询操作要经过哪些环节，然后思考可以在哪些环节进&amp;hellip;';
+	for(i in obj){
+		if(typeof obj[i].name=='undefined')
+			continue;
+		if(obj[i].name.toLowerCase()=='description'&&obj[i].content.trim().length>6){		
+			desc=obj[i].content;
+			break;
+		}
+	}
+	return desc;
+}
+</script>
+<script>
+wx.config({
+	     debug: false, 
+    	appId: 'wx9d120bedb665bdc1',
+	timestamp: '1729592901',
+	nonceStr: '6nv7LaTyE3tFQbgM',
+	signature: '211b4f5690b4f4d04c0b74acad4cffa793d314fc',
+	jsApiList: [
+   'updateTimelineShareData',
+       'updateAppMessageShareData'
+    ]
+});
+</script>
+
+<script>
+wx.ready(function () {
+	  var apoyl_weixinshare_title=document.title;
+	  var apoyl_weixinshare_link=window.location.href;
+	  var apoyl_weixinshare_desc=apoyl_weixinshare_getMeta();
+	  
+		  wx.updateTimelineShareData({
+		    title: apoyl_weixinshare_title, 
+		    link: apoyl_weixinshare_link, 
+		    imgUrl:'https://yowe.cc/wp-content/plugins/apoyl-weixinshare/public/img/logo.png', 
+			success: function () {
+				
+			}
+		});
+
+    
+		  wx.updateAppMessageShareData({
+		    title: apoyl_weixinshare_title, 
+		    desc: apoyl_weixinshare_desc, 
+		    link: apoyl_weixinshare_link, 
+		    imgUrl:'https://yowe.cc/wp-content/plugins/apoyl-weixinshare/public/img/logo.png', 
+			success: function () {
+	
+			}
+		});
+    });
+</script>
+			<script type='text/javascript'>
+				const lazyloadRunObserver = () => {
+					const lazyloadBackgrounds = document.querySelectorAll( `.e-con.e-parent:not(.e-lazyloaded)` );
+					const lazyloadBackgroundObserver = new IntersectionObserver( ( entries ) => {
+						entries.forEach( ( entry ) => {
+							if ( entry.isIntersecting ) {
+								let lazyloadBackground = entry.target;
+								if( lazyloadBackground ) {
+									lazyloadBackground.classList.add( 'e-lazyloaded' );
+								}
+								lazyloadBackgroundObserver.unobserve( entry.target );
+							}
+						});
+					}, { rootMargin: '200px 0px 200px 0px' } );
+					lazyloadBackgrounds.forEach( ( lazyloadBackground ) => {
+						lazyloadBackgroundObserver.observe( lazyloadBackground );
+					} );
+				};
+				const events = [
+					'DOMContentLoaded',
+					'elementor/lazyload/observe',
+				];
+				events.forEach( ( event ) => {
+					document.addEventListener( event, lazyloadRunObserver );
+				} );
+			</script>
+			<style id='core-block-supports-inline-css' type='text/css'>
+.wp-block-gallery.wp-block-gallery-1{--wp--style--unstable-gallery-gap:var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );gap:var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );}.wp-block-gallery.wp-block-gallery-2{--wp--style--unstable-gallery-gap:var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );gap:var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );}
+</style>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/meteor.js%3Fver=2.2.1" id="meteor-main-js"></script>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/plugins.min.js%3Fver=2.2.1" id="meteor-plugins-js"></script>
+<script type="text/javascript" src="../wp-content/uploads/meteor-extend/userlogin-extend/assets/js/login.js%3Fver=1.0" id="kz-userlogin-js"></script>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/swiper-bundle.min.js%3Fver=2.2.1" id="meteor-swiper-js"></script>
+<script type="text/javascript" id="meteor-alpine-js-extra">
+/* <![CDATA[ */
+var cxjs = {"homeurl":"https:\/\/yowe.cc","jsonapi":"https:\/\/yowe.cc\/wp-json\/cxv1\/","themedir":"https:\/\/yowe.cc\/wp-content\/themes\/meteorpro","ajaxurl":"https:\/\/yowe.cc\/wp-admin\/admin-ajax.php","endorseMsg":"\u60a8\u5df2\u7ecf\u8868\u8fc7\u6001\u4e86\uff01","popMbemon":"","postId":"898"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/alpine.min.js%3Fver=3.13.10" id="meteor-alpine-js"></script>
+</body>
+
+</html>
