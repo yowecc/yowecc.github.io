@@ -1,0 +1,764 @@
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name='robots' content='max-image-preview:large' />
+<title>高级后端必备的 Nginx相关知识 - 哟喂</title>
+<meta name="keywords" content="nginx," />
+<meta name="description" content="了解一点简单的Nginx知识“本节内容作为基础知识，如果熟悉Nginx可以略过，如果不熟悉可以实际操作一下。现在服务器安装Nginx很简单，一般只需要两行命令即可，安装完成后，启动服务。    # 安装nginx    ..." />
+<script type="text/javascript">
+/* <![CDATA[ */
+window._wpemojiSettings = {"baseUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15.0.3\/72x72\/","ext":".png","svgUrl":"https:\/\/s.w.org\/images\/core\/emoji\/15.0.3\/svg\/","svgExt":".svg","source":{"concatemoji":"https:\/\/yowe.cc\/wp-includes\/js\/wp-emoji-release.min.js?ver=6.6.2"}};
+/*! This file is auto-generated */
+!function(i,n){var o,s,e;function c(e){try{var t={supportTests:e,timestamp:(new Date).valueOf()};sessionStorage.setItem(o,JSON.stringify(t))}catch(e){}}function p(e,t,n){e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(t,0,0);var t=new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data),r=(e.clearRect(0,0,e.canvas.width,e.canvas.height),e.fillText(n,0,0),new Uint32Array(e.getImageData(0,0,e.canvas.width,e.canvas.height).data));return t.every(function(e,t){return e===r[t]})}function u(e,t,n){switch(t){case"flag":return n(e,"\ud83c\udff3\ufe0f\u200d\u26a7\ufe0f","\ud83c\udff3\ufe0f\u200b\u26a7\ufe0f")?!1:!n(e,"\ud83c\uddfa\ud83c\uddf3","\ud83c\uddfa\u200b\ud83c\uddf3")&&!n(e,"\ud83c\udff4\udb40\udc67\udb40\udc62\udb40\udc65\udb40\udc6e\udb40\udc67\udb40\udc7f","\ud83c\udff4\u200b\udb40\udc67\u200b\udb40\udc62\u200b\udb40\udc65\u200b\udb40\udc6e\u200b\udb40\udc67\u200b\udb40\udc7f");case"emoji":return!n(e,"\ud83d\udc26\u200d\u2b1b","\ud83d\udc26\u200b\u2b1b")}return!1}function f(e,t,n){var r="undefined"!=typeof WorkerGlobalScope&&self instanceof WorkerGlobalScope?new OffscreenCanvas(300,150):i.createElement("canvas"),a=r.getContext("2d",{willReadFrequently:!0}),o=(a.textBaseline="top",a.font="600 32px Arial",{});return e.forEach(function(e){o[e]=t(a,e,n)}),o}function t(e){var t=i.createElement("script");t.src=e,t.defer=!0,i.head.appendChild(t)}"undefined"!=typeof Promise&&(o="wpEmojiSettingsSupports",s=["flag","emoji"],n.supports={everything:!0,everythingExceptFlag:!0},e=new Promise(function(e){i.addEventListener("DOMContentLoaded",e,{once:!0})}),new Promise(function(t){var n=function(){try{var e=JSON.parse(sessionStorage.getItem(o));if("object"==typeof e&&"number"==typeof e.timestamp&&(new Date).valueOf()<e.timestamp+604800&&"object"==typeof e.supportTests)return e.supportTests}catch(e){}return null}();if(!n){if("undefined"!=typeof Worker&&"undefined"!=typeof OffscreenCanvas&&"undefined"!=typeof URL&&URL.createObjectURL&&"undefined"!=typeof Blob)try{var e="postMessage("+f.toString()+"("+[JSON.stringify(s),u.toString(),p.toString()].join(",")+"));",r=new Blob([e],{type:"text/javascript"}),a=new Worker(URL.createObjectURL(r),{name:"wpTestEmojiSupports"});return void(a.onmessage=function(e){c(n=e.data),a.terminate(),t(n)})}catch(e){}c(n=f(s,u,p))}t(n)}).then(function(e){for(var t in e)n.supports[t]=e[t],n.supports.everything=n.supports.everything&&n.supports[t],"flag"!==t&&(n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&n.supports[t]);n.supports.everythingExceptFlag=n.supports.everythingExceptFlag&&!n.supports.flag,n.DOMReady=!1,n.readyCallback=function(){n.DOMReady=!0}}).then(function(){return e}).then(function(){var e;n.supports.everything||(n.readyCallback(),(e=n.source||{}).concatemoji?t(e.concatemoji):e.wpemoji&&e.twemoji&&(t(e.twemoji),t(e.wpemoji)))}))}((window,document),window._wpemojiSettings);
+/* ]]> */
+</script>
+<style id='wp-emoji-styles-inline-css' type='text/css'>
+
+	img.wp-smiley, img.emoji {
+		display: inline !important;
+		border: none !important;
+		box-shadow: none !important;
+		height: 1em !important;
+		width: 1em !important;
+		margin: 0 0.07em !important;
+		vertical-align: -0.1em !important;
+		background: none !important;
+		padding: 0 !important;
+	}
+</style>
+<link rel='stylesheet' id='wp-block-library-css' href='../wp-includes/css/dist/block-library/style.min.css%3Fver=6.6.2.css' type='text/css' media='all' />
+<style id='classic-theme-styles-inline-css' type='text/css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+</style>
+<style id='global-styles-inline-css' type='text/css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgba(6,147,227,1) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgba(252,185,0,1) 0%,rgba(255,105,0,1) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgba(255,105,0,1) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 13px;--wp--preset--font-size--medium: 20px;--wp--preset--font-size--large: 36px;--wp--preset--font-size--x-large: 42px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);--wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);}:where(.is-layout-flex){gap: 0.5em;}:where(.is-layout-grid){gap: 0.5em;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+:where(.wp-block-post-template.is-layout-flex){gap: 1.25em;}:where(.wp-block-post-template.is-layout-grid){gap: 1.25em;}
+:where(.wp-block-columns.is-layout-flex){gap: 2em;}:where(.wp-block-columns.is-layout-grid){gap: 2em;}
+:root :where(.wp-block-pullquote){font-size: 1.5em;line-height: 1.6;}
+</style>
+<link rel='stylesheet' id='github-repo-style-css' href='../wp-content/plugins/github-repo-info/css/style2.css%3Fver=2.0.5.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-bootstrap-css' href='../wp-content/themes/meteorpro/assets/css/bootstrap.min.css%3Fver=2.2.1.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-main-css' href='../wp-content/themes/meteorpro/assets/css/main.min.css%3Fver=1728964183.css' type='text/css' media='all' />
+<style id='meteor-main-inline-css' type='text/css'>
+ :root, [data-bs-theme=light]{ --bs-link-hover-color:#5696f6; --cbg-color:#5696f6; --cbg-gradient:var(--cx-gradient-deongaree); --bs-link-hover-color-rgb: 86,150,246; --cbg-lightgradient:var(--cx-gradient-purple); --avatar-opacity:0.5; } [data-bs-theme=dark] { --bs-link-hover-color: #5696f6; } .sort-56 {--cbcar-color:#ffa387 0%, #fe4f70 100%}.sort-57 {--cbcar-color:#2af598 0%, #009efd 100%}.sort-59 {--cbcar-color:#6772FF 0%, #00F9E5 100%}.sort-60 {--cbcar-color:#1c5aff 0%, #e48bfa 100%}.sort-61 {--cbcar-color:#d71881 0%, #409bcd 100%}.sort-62 {--cbcar-color:#50cc7f 0%, #f5d100 100%}.sort-66 {--cbcar-color:#2af598 0%, #009efd 100%}.sort-67 {--cbcar-color:#2af598 0%, #009efd 100%}.sort-68 {--cbcar-color:#243949 0%, #517fa4 100%}.sort-76 {--cbcar-color:#6772FF 0%, #00F9E5 100%}.sort-96 {--cbcar-color:#50cc7f 0%, #f5d100 100%}.blackcolor {backdrop-filter: blur(5px) brightness(90%)}
+</style>
+<link rel='stylesheet' id='kz-uc-style-css' href='../wp-content/uploads/meteor-extend/usercenter-extend/assets/css/uc.min.css%3Fver=1729582687.css' type='text/css' media='all' />
+<link rel='stylesheet' id='kz-userlogin-css' href='../wp-content/uploads/meteor-extend/userlogin-extend/assets/css/login.min.css%3Fver=1.0.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-swiper-css' href='../wp-content/themes/meteorpro/assets/css/swiper-bundle.min.css%3Fver=2.2.1.css' type='text/css' media='all' />
+<link rel='stylesheet' id='meteor-icons-css' href='https://at.alicdn.com/t/c/font_1989294_g60v0fz2ljj.css?ver=2.2.1' type='text/css' media='all' />
+<script type="text/javascript" src="../wp-includes/js/jquery/jquery.min.js%3Fver=3.7.1" id="jquery-core-js"></script>
+<script type="text/javascript" src="../wp-includes/js/jquery/jquery-migrate.min.js%3Fver=3.4.1" id="jquery-migrate-js"></script>
+<script type="text/javascript" src="../wp-content/plugins/apoyl-weixinshare/public/js/jweixin-1.6.0.js%3Fver=2.7.0" id="apoyl-weixinshare-js"></script>
+<link rel="canonical" href="index.html" />
+<link rel="icon" href="../wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-32x32.png" sizes="32x32" />
+<link rel="icon" href="../wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-192x192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="../wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-180x180.png" />
+<meta name="msapplication-TileImage" content="https://yowe.cc/wp-content/uploads/2024/09/cropped-cropped-WhatsApp_Image_2024-09-25_at_5.25.19_PM-removebg-preview-1-270x270.png" />
+</head>
+
+<body class="post-template-default single single-post postid-892 single-format-standard wp-custom-logo cxtheme-body overflow-y-scroll cxtheme-width-theme" x-data="xhData" :data-bs-theme="darkMode ? 'dark' : ''" :class="{'dark': darkMode}">
+        <div class="site-wrapper navfixed">
+        <header class="header-s1" :class="{'onfixed' : searchData.Popup}" id="header-s1">
+            <div class="headnav">
+                <div class="container-xl h-container hwdiy">
+                    <div class="cxlogo">
+                                                <a href="../index.html" aria-label="哟喂">
+                            <img src="../wp-content/uploads/2024/10/yowe320.png" alt="哟喂" class="c-light" width="320" height="120"/>
+                            <img src="../wp-content/uploads/2024/10/yowe320.png" alt="哟喂" class="c-dark" width="320" height="120"/>
+                        </a>
+                    </div>
+                    <nav class="head-menu d-lg-flex navalign-left">
+                        <ul id="menu-main-menu" class="navbar-nav">
+                        <li class="menu-item"><a href="http://yowe.cc/">首页</a></li>
+<li class="menu-item"><a href="../category/科技资讯/index.html">科技资讯</a></li>
+<li class="menu-item menu-item-has-children"><a href="../category/企业通用/index.html">企业通用 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/电子商务/index.html">电子商务</a></li>
+	<li class="menu-item"><a href="../category/智慧农业/index.html">智慧农业</a></li>
+	<li class="menu-item"><a href="../category/健康医疗/index.html">健康医疗</a></li>
+	<li class="menu-item"><a href="../category/多媒体/index.html">多媒体</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/人工智能/index.html">人工智能 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/人工智能/aigc/index.html">AIGC</a></li>
+	<li class="menu-item"><a href="../category/人工智能/多智体/index.html">多智体</a></li>
+	<li class="menu-item"><a href="../category/人工智能/数据标注/index.html">数据标注</a></li>
+	<li class="menu-item"><a href="../category/人工智能/智能应用/index.html">智能应用</a></li>
+	<li class="menu-item"><a href="../category/人工智能/机器学习/index.html">机器学习</a></li>
+	<li class="menu-item"><a href="../category/人工智能/自然语言处理/index.html">自然语言处理</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/工业物联/index.html">工业物联 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/工业物联/pcb/index.html">PCB</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工业视觉/index.html">工业视觉</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工控仿真/index.html">工控仿真</a></li>
+	<li class="menu-item"><a href="../category/工业物联/数控机床/index.html">数控机床</a></li>
+	<li class="menu-item"><a href="../category/工业物联/无人机/index.html">无人机</a></li>
+	<li class="menu-item"><a href="../category/工业物联/物联网/index.html">物联网</a></li>
+	<li class="menu-item"><a href="../category/工业物联/电路设计/index.html">电路设计</a></li>
+	<li class="menu-item"><a href="../category/工业物联/自动驾驶/index.html">自动驾驶</a></li>
+</ul>
+</li>
+<li class="menu-item current-post-ancestor menu-item-has-children"><a href="../category/开发运维/index.html">开发运维 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/开发运维/云计算/index.html">云计算</a></li>
+	<li class="menu-item"><a href="../category/开发运维/前端开发/index.html">前端开发</a></li>
+	<li class="menu-item current-post-ancestor current-menu-parent"><a href="../category/开发运维/后端开发/index.html">后端开发</a></li>
+	<li class="menu-item"><a href="../category/开发运维/客户端/index.html">客户端</a></li>
+	<li class="menu-item"><a href="../category/开发运维/嵌入式/index.html">嵌入式</a></li>
+	<li class="menu-item"><a href="../category/开发运维/开发工具/index.html">开发工具</a></li>
+	<li class="menu-item"><a href="../category/开发运维/数据库/index.html">数据库</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item"><a href="../category/金融科技/index.html">金融科技</a></li>
+<li class="menu-item"><a href="../category/工具软件/index.html">工具软件</a></li>
+                        </ul>
+                    </nav>
+                    <div class="header-r" style="--scale:1;--srcolor:#ac44da">
+                        <ul class="h-btnbox sm-cnone d-flex gap-1">
+                            <li class="list-inline-item">
+                                <a href="../ranking/index.html" target="_blank" aria-label="Ranking">
+                                    <i class="cxicon cxicon-ranking me-0"></i>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript:;" @click="darkMode = !darkMode;localStorage.setItem('darkMode', darkMode);" aria-label="Mode Switch">
+                                    <i class="cxicon cxicon-sunlight me-0" :class="{'d-none':!darkMode}"></i>
+                                    <i class="cxicon cxicon-moon me-0" :class="{'d-none':darkMode}"></i>
+                                </a>
+                            </li> 
+                        </ul>
+                        <div class="h-buttons d-flex">
+                            <button type="button" class="search-icon btn-default icon-button" :class="{'active':searchData.Popup}" @click="searchData.searchbtnClick()" title="Search Btn">
+                                <i class="cxicon cxicon-error me-0 anim"></i>
+                                <i class="cxicon cxicon-search me-0 anim"></i>
+                            </button>
+                            <!-- 移动端菜单 -->
+                            <button type="button" class="search btn-default icon-button d-lg-none" @click="moibleMenu = popData.bgShow = true" title="Menu Btn">
+                                <i class="cxicon cxicon-menu3 me-0"></i>
+                            </button>
+                            <!-- menu.end -->
+                                                    </div>
+                    </div>
+
+                </div>
+            </div>            
+        </header><!-- header.end-->
+        <!-- Moible Nav -->
+        <div class="mobile-navbox anim" :class="{'visible': moibleMenu}">
+            <button type="button" class="btn-close" aria-label="Close" @click="popData.bgShow = moibleMenu = false"><i class="cxicon cxicon-caidanshouqi"></i></button>
+            <div class="m-menulogo p-4 pt-3"></div>
+            <div class="m-navbox p-4 pt-0">
+                <ul id="moible-menu" class="m-nav pe-4">
+                <li class="menu-item"><a href="http://yowe.cc/">首页</a></li>
+<li class="menu-item"><a href="../category/科技资讯/index.html">科技资讯</a></li>
+<li class="menu-item menu-item-has-children"><a href="../category/企业通用/index.html">企业通用 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/电子商务/index.html">电子商务</a></li>
+	<li class="menu-item"><a href="../category/智慧农业/index.html">智慧农业</a></li>
+	<li class="menu-item"><a href="../category/健康医疗/index.html">健康医疗</a></li>
+	<li class="menu-item"><a href="../category/多媒体/index.html">多媒体</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/人工智能/index.html">人工智能 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/人工智能/aigc/index.html">AIGC</a></li>
+	<li class="menu-item"><a href="../category/人工智能/多智体/index.html">多智体</a></li>
+	<li class="menu-item"><a href="../category/人工智能/数据标注/index.html">数据标注</a></li>
+	<li class="menu-item"><a href="../category/人工智能/智能应用/index.html">智能应用</a></li>
+	<li class="menu-item"><a href="../category/人工智能/机器学习/index.html">机器学习</a></li>
+	<li class="menu-item"><a href="../category/人工智能/自然语言处理/index.html">自然语言处理</a></li>
+</ul>
+</li>
+<li class="menu-item menu-item-has-children"><a href="../category/工业物联/index.html">工业物联 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/工业物联/pcb/index.html">PCB</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工业视觉/index.html">工业视觉</a></li>
+	<li class="menu-item"><a href="../category/工业物联/工控仿真/index.html">工控仿真</a></li>
+	<li class="menu-item"><a href="../category/工业物联/数控机床/index.html">数控机床</a></li>
+	<li class="menu-item"><a href="../category/工业物联/无人机/index.html">无人机</a></li>
+	<li class="menu-item"><a href="../category/工业物联/物联网/index.html">物联网</a></li>
+	<li class="menu-item"><a href="../category/工业物联/电路设计/index.html">电路设计</a></li>
+	<li class="menu-item"><a href="../category/工业物联/自动驾驶/index.html">自动驾驶</a></li>
+</ul>
+</li>
+<li class="menu-item current-post-ancestor menu-item-has-children"><a href="../category/开发运维/index.html">开发运维 <i class="cxicon cxicon-chevron-down menu-children-icon"></i></a>
+<ul class="sub-menu">
+	<li class="menu-item"><a href="../category/开发运维/云计算/index.html">云计算</a></li>
+	<li class="menu-item"><a href="../category/开发运维/前端开发/index.html">前端开发</a></li>
+	<li class="menu-item current-post-ancestor current-menu-parent"><a href="../category/开发运维/后端开发/index.html">后端开发</a></li>
+	<li class="menu-item"><a href="../category/开发运维/客户端/index.html">客户端</a></li>
+	<li class="menu-item"><a href="../category/开发运维/嵌入式/index.html">嵌入式</a></li>
+	<li class="menu-item"><a href="../category/开发运维/开发工具/index.html">开发工具</a></li>
+	<li class="menu-item"><a href="../category/开发运维/数据库/index.html">数据库</a></li>
+	<li class="menu-item"><a href="../category/系统运维/index.html">系统运维</a></li>
+</ul>
+</li>
+<li class="menu-item"><a href="../category/金融科技/index.html">金融科技</a></li>
+<li class="menu-item"><a href="../category/工具软件/index.html">工具软件</a></li>
+                </ul>
+            </div>
+            <div class="m-btnbox p-4">
+                <ul class="h-btnbox">
+                    <li class="list-inline-item">
+                        <a href="index.html#" target="_blank" aria-label="Msg">
+                            <i class="cxicon cxicon-xiaoxi"></i>
+                        </a>
+                    </li>
+                    <li class="list-inline-item">
+                        <a href="javascript:;" @click="darkMode = !darkMode;localStorage.setItem('darkMode', darkMode);"  aria-label="Mode Switch">
+                            <i class="cxicon cxicon-sunlight"></i>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <!-- MN.end -->
+        
+
+        <main class="main-container" role="main"><div class="banner trem-banner mb-4">
+    <div class="container-xl">
+        
+            <nav class="breadcrumbs " aria-label="Breadcrumb Nav">
+                <ol class="breadcrumb flex-nowrap">
+                
+        <li class="item-home flex-shrink-0">
+            <a  href="../index.html" title="哟喂">
+                <span>首页</span>
+            </a>
+        </li>
+
+        <li class="item-category flex-shrink-0">
+            <a  href="../category/开发运维/后端开发/index.html" title="后端开发">
+                <span>后端开发</span>
+            </a>
+        </li>
+
+        <li class="item-current line-one pe-4">
+            <a  href="index.html" title="高级后端必备的 Nginx相关知识">
+                <span>高级后端必备的 Nginx相关知识</span>
+            </a>
+        </li>
+                </ol>
+            </nav>
+                </div>
+</div>
+<!-- 3 -->
+<section class="wi widget-coltow" x-data="Xh_Postmeta">
+    <div class="container-xl">
+        <div class="row cxrow">
+            <div class="col-left">
+                <div class="rowleft">
+                    <div class="main-content pe-xl-4">
+                                <article class="post is-single post-content status-publish">
+            <!-- 文章标题 -->
+            <header class="post-header">
+                <h1 class="post-title mt-3 mb-4 fs-2">高级后端必备的 Nginx相关知识</h1><div class="article-meta">
+<ul class="meta-itembox">
+<li class="list-inline-item"><a class="author me-0" href="../author/yowe/index.html"><figure class="figure-avatar userid-1"><img alt='' src='../wp-content/themes/meteorpro/assets/images/lazy.png' data-src='http://yowe.cc/wp-content/uploads/userfigure/avatar-yowe.webp?v=1728971186' srcset='../wp-content/uploads/userfigure/avatar-yowe.webp%3Fv=1728971186 2x' class='lozad avatar avatar-30 photo avatar-default' height='30' width='30' decoding='async'/></figure>哟喂</a></li>
+<li class="list-inline-item"><a href="../category/开发运维/后端开发/index.html" rel="category tag">后端开发</a></li>
+<li class="list-inline-item">2024-10-22</li>
+</ul>
+</div>            </header>
+                        <!-- 文章正文 -->
+            <div class="article-body mb-4">
+                <section data-tool="mdnice编辑器" data-website="https://www.mdnice.com" style='margin-bottom: 0px;padding-left: 10px;padding-right: 10px;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;width: auto;font-family: Optima, "Microsoft YaHei", PingFangSC-regular, serif;font-size: 16px;color: rgb(0, 0, 0);line-height: 1.5em;word-spacing: 0em;letter-spacing: 0em;word-break: break-word;text-align: left;'>
+<p style="text-align: center;"><img decoding="async" src="../wp-content/uploads/2024/10/frc-a06d14564918d704f5b167ee920f2063.png"></p>
+<section data-tool="mdnice编辑器" data-website="https://www.mdnice.com" style='margin-bottom: 0px;padding-left: 10px;padding-right: 10px;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;width: auto;font-family: Optima, "Microsoft YaHei", PingFangSC-regular, serif;font-size: 16px;color: rgb(0, 0, 0);line-height: 1.5em;word-spacing: 0em;letter-spacing: 0em;word-break: break-word;text-align: left;'>
+<h2 data-tool="mdnice编辑器" style="border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);margin-top: 30px;margin-bottom: 15px;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: flex;flex-direction: unset;float: unset;height: auto;justify-content: unset;line-height: 1.5em;overflow: unset;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">
+<span style="display: none;"></span><span style="font-size: 22px;color: rgb(89, 89, 89);border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: block;font-weight: bold;flex-direction: unset;float: unset;height: auto;justify-content: unset;overflow: unset;text-indent: 0em;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">了解一点简单的Nginx知识</span><span style="display: none;"></span><br />
+</h2>
+<blockquote data-tool="mdnice编辑器" style="margin-top: 20px;margin-bottom: 20px;padding: 10px 10px 10px 20px;border-style: none;border-top-width: 3px;border-bottom-width: 3px;border-right-width: 3px;border-color: rgba(0, 0, 0, 0.4);border-radius: 0px;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(0, 0, 0, 0.05);width: auto;height: auto;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px;overflow: auto;"><p>
+<span style="display: block;color: rgb(85, 85, 85);font-size: 28px;line-height: 1.5em;letter-spacing: 0em;font-weight: bold;">“</span></p>
+<p style="text-indent: 0em;padding-top: 8px;padding-bottom: 8px;color: rgb(0, 0, 0);font-size: 16px;line-height: 1.8em;letter-spacing: 0em;">本节内容作为基础知识，如果熟悉Nginx可以略过，如果不熟悉可以实际操作一下。</p>
+</blockquote>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">现在服务器安装Nginx很简单，一般只需要两行命令即可，安装完成后，启动服务。</p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 安装nginx</span><br>    yum install -y nginx<br>    <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 启动nginx</span><br>    systemctl start nginx<br>    <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 查看nginx运行状态</span><br>    systemctl status nginx<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">此时Nginx会启动服务，默认80端口。此时如果我们的服务器外网防火墙<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>80</code>端口开启，那么访问外网IP，就能看到Nginx启动的服务</p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">Nginx的配置文件，一般位于<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>/etc/nginx</code>目录下，具体内容如下：</p>
+<figure data-tool="mdnice编辑器" style="margin-top: 10px;margin-bottom: 10px;display: flex;flex-direction: column;justify-content: center;align-items: center;"><img decoding="async" src="../wp-content/uploads/2024/10/frc-eaed25ea928de01994ab68856b7e64f0.jpg"></figure>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">我们基本只需要关注文件<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>nginx.conf</code>和<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>conf.d</code>目录，下面是一份<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>nginx.conf</code>配置文件，不懂也不要怕，基本都不需要改动，默认80服务已经开启了。</p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    user nginx; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># nginx进行运行的用户</span><br>    error_log /var/<span style="color: #e6c07b;line-height: 26px;">log</span>/nginx/error.log; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 错误日志</span><br><br>    http {<br>        log_format main ...; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># nginx日志格式</span><br>        access_log /var/<span style="color: #e6c07b;line-height: 26px;">log</span>/nginx/access.log main; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 日志位置</span><br>        <br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 引入的nginx配置文件，可以将server放在该目录下，方便管理</span><br>        include /etc/nginx/conf.d/*.conf; <br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 一个nginx服务一个server</span><br>        server {<br>            listen 80; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 服务启动的端口</span><br>            server_name _; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 服务域名或IP</span><br>            root /usr/share/nginx/html; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 服务指向的文件地址</span><br>            <br>            error_page 404 /404.html; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 找不到资源重定向到404页面</span><br>            location = /40x.html {};<br>            <br>            error_page 500 502 503 504 /50x.html; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 系统错误重定向50x页面</span><br>            location = /50x.html {};<br>        }<br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># server {</span><br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;">#    listen 443; # 支持https协议</span><br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;">#    server_name _;</span><br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;">#    root /usr/share/nginx/html;</span><br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;">#    ...</span><br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># }</span><br>    }<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">我们可以看到该文件分成了多层</p>
+<ul data-tool="mdnice编辑器" style="margin-top: 8px;margin-bottom: 8px;padding-left: 25px;" class="list-paddingleft-1">
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">第一层：user、error_log、http</section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">第二层：log_format、access_log、include、server</section>
+</li>
+</ul>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">在http下可以有多个<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>Server</code>，启动多个服务，但如果都写在一个文件里面，文件就越来越大了，那么为了便于管理多个服务，我们要对<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>nginx.conf</code>进行拆分。</p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">conf.d目录下一般是空的，我们新建文件 web.conf或者任意命名的以.conf结尾的文件即可被Nginx使用，内容为：</p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    server {<br>        listen 80; <br>        server_name _; <br>        root /usr/share/nginx/html; <br><br>        error_page 404 /404.html; <br>        location = /40x.html {};<br><br>        error_page 500 502 503 504 /50x.html; <br>        location = /50x.html {};<br>    }<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">由于这里使用了80端口，之前nginx.conf文件server中listen为80的可以删除了。</p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">此时nginx.conf中的文件内容为：</p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    user nginx; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># nginx进行运行的用户</span><br>    error_log /var/<span style="color: #e6c07b;line-height: 26px;">log</span>/nginx/error.log; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 错误日志</span><br><br>    http {<br>        log_format main ...; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># nginx日志格式</span><br>        access_log /var/<span style="color: #e6c07b;line-height: 26px;">log</span>/nginx/access.log main; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 日志位置</span><br>        <br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 引入的nginx配置文件，可以将server放在该目录下，方便管理</span><br>        include /etc/nginx/conf.d/*.conf; <br>    }<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;"><code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>include /etc/nginx/conf.d/*.conf; </code>我们看到这一行语句发现，include帮助我们引用conf.d下以.conf结尾的配置文件。</p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">完成后执行nginx指令</p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 检查nginx配置文件是否正确，如果错误会提示具体的错误信息</span><br>    nginx -t<br>    <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 重新启动nginx服务</span><br>    nginx -s reload<br></code></pre>
+<figure data-tool="mdnice编辑器" style="margin-top: 10px;margin-bottom: 10px;display: flex;flex-direction: column;justify-content: center;align-items: center;"><img decoding="async" src="../wp-content/uploads/2024/10/frc-bc5b11f39b5c00133e436b34098a9cc6.jpg"></figure>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">观察日志，此时发现Nginx就重新启动了，读取的是新的配置文件。</p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;"><strong style="color: rgb(71, 193, 168);background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;width: auto;height: auto;border-style: none;border-width: 3px;border-color: rgba(0, 0, 0, 0.4);border-radius: 0px;">其他操作nginx的指令</strong></p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    nginx -s stop<br>    nginx -s start<br></code></pre>
+<h2 data-tool="mdnice编辑器" style="border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);margin-top: 30px;margin-bottom: 15px;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: flex;flex-direction: unset;float: unset;height: auto;justify-content: unset;line-height: 1.5em;overflow: unset;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">
+<span style="display: none;"></span><span style="font-size: 22px;color: rgb(89, 89, 89);border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: block;font-weight: bold;flex-direction: unset;float: unset;height: auto;justify-content: unset;overflow: unset;text-indent: 0em;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">启动一个简单的Nginx服务</span><span style="display: none;"></span><br />
+</h2>
+<ul data-tool="mdnice编辑器" style="margin-top: 8px;margin-bottom: 8px;padding-left: 25px;" class="list-paddingleft-1">
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">一台服务器或PC，安装并启动Nginx服务</section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;"><code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>/data/web</code>两个html文件<code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>index.html</code>, <code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>about.html</code></section>
+</li>
+</ul>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">1、<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>index.html</code>或<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>about.html</code></p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    <br>    <br>        <br>           <meta style="color: #98c379;line-height: 26px;">"utf-8"&gt;<br>           <title>nginx</title>
+<br>        <br>        <br>            通过nginx部署的第一个服务<br>        <br>    <br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">2、修改<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>/etc/nginx/conf.d/web.conf</code></p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    server { <br>        listen 80; <br>        server_name localhost; <br>        root /data/web; <br>        index index.html; <br>    }<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">执行<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>nginx -t</code>确认配置文件修改没问题，再执行<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>nginx -s reload</code>重启Nginx，此时我们访问外网IP（默认80端口，下面默认都是访问80端口）</p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">这样我们的静态资源文件就部署好了，通过url访问资源：</p>
+<ul data-tool="mdnice编辑器" style="margin-top: 8px;margin-bottom: 8px;padding-left: 25px;" class="list-paddingleft-1">
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;"><code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>http://xxxx/index.html</code></section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;"><code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>http://xxxx/about.html</code></section>
+</li>
+</ul>
+<h2 data-tool="mdnice编辑器" style="border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);margin-top: 30px;margin-bottom: 15px;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: flex;flex-direction: unset;float: unset;height: auto;justify-content: unset;line-height: 1.5em;overflow: unset;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">
+<span style="display: none;"></span><span style="font-size: 22px;color: rgb(89, 89, 89);border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: block;font-weight: bold;flex-direction: unset;float: unset;height: auto;justify-content: unset;overflow: unset;text-indent: 0em;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">部署单页面应用</span><span style="display: none;"></span><br />
+</h2>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">我们快速创建一个CRA单页面应用，修改App.js文件，这里使用<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>react-router-dom@6</code></p>
+<h3 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 20px;color: rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">1、Hash模式</span><span style="display: none;"></span><br />
+</h3>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    import { HashRouter, Routes, Route, Link } from <span style="color: #98c379;line-height: 26px;">"react-router-dom"</span>;<br>    import <span style="color: #98c379;line-height: 26px;">'./App.css'</span>;<br><br>    <span style="color: #c678dd;line-height: 26px;">function</span> <span style="line-height: 26px;"><span style="color: #61aeee;line-height: 26px;">App</span></span>() {<br>      <span style="color: #e6c07b;line-height: 26px;">return</span> (<br>        <div style="color: #98c379;line-height: 26px;">"App"&gt;<br>            <hashrouter style="color: #98c379;line-height: 26px;">"/"&gt;<br>              <div>
+<br>                <link style="color: #98c379;line-height: 26px;">"/"&gt;Home<br>                <link style="color: #98c379;line-height: 26px;">"/about"&gt;About<br>              </div>
+<br>              <routes><br>                <route style="color: #98c379;line-height: 26px;">"/" element={<div>home</div>}&gt;</route><br>                <route style="color: #98c379;line-height: 26px;">"/about" element={<div>about</div>} /&gt;<br>              </route></routes><br>            </hashrouter><br>        </div>
+<br>      );<br>    }<br><br>    <span style="color: #e6c07b;line-height: 26px;">export</span> default App;<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">我们执行<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>yarn build</code>，然后将<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>build</code>目录下的文件迁移到<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>/data/web</code>下，再访问服务器IP，发现访问正常，路由切换也没有问题，即部署成功。</p>
+<h3 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 20px;color: rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">2、History模式</span><span style="display: none;"></span><br />
+</h3>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    import {<br>      BrowserRouter,<br>      ...<br>    } from <span style="color: #98c379;line-height: 26px;">"react-router-dom"</span>;<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">将Hash模式中的代码修改为BrowserRouter，运行本地项目，路由切换正常，该路由是History模式</p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">同样执行<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>yarn build</code>生成<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>build</code>目录，将该目录下的文件迁移到上一步服务器的目录/data/web下，然后访问外网IP，发现渲染效果和上图一样，但是当我们点击About页面，然后刷新浏览器发现，出现了404。</p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">先说解决办法，然后解释下原因，修改Nginx配置<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>web.conf</code></p>
+<blockquote data-tool="mdnice编辑器" style="margin-top: 20px;margin-bottom: 20px;padding: 10px 10px 10px 20px;border-style: none;border-top-width: 3px;border-bottom-width: 3px;border-right-width: 3px;border-color: rgba(0, 0, 0, 0.4);border-radius: 0px;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(0, 0, 0, 0.05);width: auto;height: auto;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px;overflow: auto;"><p>
+<span style="display: block;color: rgb(85, 85, 85);font-size: 28px;line-height: 1.5em;letter-spacing: 0em;font-weight: bold;">“</span></p>
+<p style="text-indent: 0em;padding-top: 8px;padding-bottom: 8px;color: rgb(0, 0, 0);font-size: 16px;line-height: 1.8em;letter-spacing: 0em;">增加一行try_files配置，当请求的地址找不到时，重新指向index.html文件</p>
+</blockquote>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    server { <br>        listen 80; <br>        server_name localhost; <br>        root /data/www/; <br>        <br>        location / { <br>            try_files <span style="color: #d19a66;line-height: 26px;">$uri</span> <span style="color: #d19a66;line-height: 26px;">$uri</span>/ /index.html; <br>            index index.html; <br>        } <br>    }<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">重启nginx <code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>nginx -t</code>、<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>nginx -s reload</code> 再次刷新页面，发现页面访问正常了，切换也没有问题。</p>
+<h3 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 20px;color: rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">3、为什么hash模式不会出现404，而history模式会出现404？</span><span style="display: none;"></span><br />
+</h3>
+<blockquote data-tool="mdnice编辑器" style="margin-top: 20px;margin-bottom: 20px;padding: 10px 10px 10px 20px;border-style: none;border-top-width: 3px;border-bottom-width: 3px;border-right-width: 3px;border-color: rgba(0, 0, 0, 0.4);border-radius: 0px;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(0, 0, 0, 0.05);width: auto;height: auto;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px;overflow: auto;"><p>
+<span style="display: block;color: rgb(85, 85, 85);font-size: 28px;line-height: 1.5em;letter-spacing: 0em;font-weight: bold;">“</span></p>
+<p style="text-indent: 0em;padding-top: 8px;padding-bottom: 8px;color: rgb(0, 0, 0);font-size: 16px;line-height: 1.8em;letter-spacing: 0em;">了解下这两种模式的区别就知道答案了</p>
+</blockquote>
+<h4 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 18px;line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">1）Hash模式</span><span style="display: none;"></span><br />
+</h4>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">在hash路由模式下，URL中的Hash值（#后面的部分）用来表示应用的状态或路由信息。当用户切换路由时，只有Hash部分发生变化，并没有向服务器发出请求，就做到了浏览器对于页面路由的管理。</p>
+<ul data-tool="mdnice编辑器" style="margin-top: 8px;margin-bottom: 8px;padding-left: 25px;" class="list-paddingleft-1">
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">Hash模式下，URL和路由路径由#号分隔：<code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>http://example.com/#/about?query=abc</code></section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">当<code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>#</code>后面的路径发生变化时，会触发浏览器的hashchange事件，通过hashchange事件监听到路由路径的变化，从而导航到不同的路由页面。</section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">Hash模式<code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>#</code>后面的路径并不会作为URL出现在网络请求中。例如对于输入的example.com/#/about[1] ，实际上请求的URL是example.com/[2] ，所以不管输入的Hash路由路径是什么，实际网络请求的都是主域名或<code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>IP:Port</code></section>
+</li>
+</ul>
+<h4 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 18px;line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">2）History模式</span><span style="display: none;"></span><br />
+</h4>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">History路由模式下，调用浏览器HTML5中<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>history</code>API来管理导航。URL和路径是连接在一起的，路由的路径包含在请求的URL里面，路由路径作为URL的一部分一起发送。</p>
+<ul data-tool="mdnice编辑器" style="margin-top: 8px;margin-bottom: 8px;padding-left: 25px;" class="list-paddingleft-1">
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">History模式下，URL路由格式为：<code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>http://example.com/about&amp;query=abc</code></section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">当我们向服务器发出请求时，服务器会请求对应的路径的资源</section>
+</li>
+</ul>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">综上，当我们打开入口文件index.html的路径时，切换url此时是本地路由，访问正常，但是当我们处于非入口页面时，刷新浏览器，此时发出请求，由于服务器就找不到资源路径了，变成了404。</p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">而对于Hash模式来说，总是请求的根路径，所以不会出现这种情况。</p>
+<h2 data-tool="mdnice编辑器" style="border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);margin-top: 30px;margin-bottom: 15px;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: flex;flex-direction: unset;float: unset;height: auto;justify-content: unset;line-height: 1.5em;overflow: unset;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">
+<span style="display: none;"></span><span style="font-size: 22px;color: rgb(89, 89, 89);border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: block;font-weight: bold;flex-direction: unset;float: unset;height: auto;justify-content: unset;overflow: unset;text-indent: 0em;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">配置反向代理、负载均衡</span><span style="display: none;"></span><br />
+</h2>
+<figure data-tool="mdnice编辑器" style="margin-top: 10px;margin-bottom: 10px;display: flex;flex-direction: column;justify-content: center;align-items: center;"><img decoding="async" src="../wp-content/uploads/2024/10/frc-2dd97d66a66b5cadba9fe55c4155231e.jpg"></figure>
+<h2 data-tool="mdnice编辑器" style="border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);margin-top: 30px;margin-bottom: 15px;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: flex;flex-direction: unset;float: unset;height: auto;justify-content: unset;line-height: 1.5em;overflow: unset;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">
+<span style="display: none;"></span><span style="font-size: 22px;color: rgb(89, 89, 89);border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: block;font-weight: bold;flex-direction: unset;float: unset;height: auto;justify-content: unset;overflow: unset;text-indent: 0em;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">反向代理</span><span style="display: none;"></span><br />
+</h2>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">反向代理的用途很多，这里我们看一个常用的，代理请求的接口。我们在发布时前端的域名和后端api服务的域名经常不一致，此时就可以使用Nginx配置反向代理来解决这个问题。</p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    server {<br>        location /api {<br>            proxy_pass http://backend1.example.com;<br>            proxy_set_header Host <span style="color: #d19a66;line-height: 26px;">$host</span>; <br>            proxy_set_header X-Real-IP <span style="color: #d19a66;line-height: 26px;">$remote_addr</span>; <br>            proxy_set_header X-Forwarded-For <span style="color: #d19a66;line-height: 26px;">$proxy_add_x_forwarded_for</span>;<br>        }<br>    }<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">代理的时候要注意添加必要的参数，帮助后端获取一些客户端的请求数据</p>
+<ul data-tool="mdnice编辑器" style="margin-top: 8px;margin-bottom: 8px;padding-left: 25px;" class="list-paddingleft-1">
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;"><code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>proxy_set_header Host $host; </code>：客户端请求的主机名（Host），不加的话，后端无法获取主机名信息</section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;"><code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>proxy_set_header X-Real-IP $remote_addr;</code>：用户的真实IP(X-Real-IP)，如果不设置，后端只能拿到代理服务器的IP</section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;"><code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;</code>代理链路，如果用户中间经过了多个代理服务器，如果不加这个参数，那么后端服务将无法获取用户的真实来源</section>
+</li>
+</ul>
+<h2 data-tool="mdnice编辑器" style="border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);margin-top: 30px;margin-bottom: 15px;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: flex;flex-direction: unset;float: unset;height: auto;justify-content: unset;line-height: 1.5em;overflow: unset;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">
+<span style="display: none;"></span><span style="font-size: 22px;color: rgb(89, 89, 89);border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: block;font-weight: bold;flex-direction: unset;float: unset;height: auto;justify-content: unset;overflow: unset;text-indent: 0em;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">负载均衡</span><span style="display: none;"></span><br />
+</h2>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">Nginx可以作为负载均衡服务器使用，通过配置upstream来分发流量，同时可以配置一些参数：</p>
+<ul data-tool="mdnice编辑器" style="margin-top: 8px;margin-bottom: 8px;padding-left: 25px;" class="list-paddingleft-1">
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">weight：分发权重</section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">ip_hash：配置始终将ip的请求始终转发到同一台后端服务器。</section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">max_fails: 将某个后台服务标记为不可用之前，允许请求失败的次数</section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">backup：标记当前服务为备用服务</section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;">down：暂时不可用</section>
+</li>
+</ul>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    upstream api {<br>        ip_hash;<br>        server backend1.example.com;<br>        server backend2.example.com;<br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># server backend1.example.com weight=5;</span><br>    }<br>    server {<br>        location /api {<br>            proxy_pass http://api;<br>            proxy_set_header Host <span style="color: #d19a66;line-height: 26px;">$host</span>; <br>            proxy_set_header X-Real-IP <span style="color: #d19a66;line-height: 26px;">$remote_addr</span>; <br>            proxy_set_header X-Forwarded-For <span style="color: #d19a66;line-height: 26px;">$proxy_add_x_forwarded_for</span>;<br>        }<br>    }<br></code></pre>
+<h2 data-tool="mdnice编辑器" style="border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);margin-top: 30px;margin-bottom: 15px;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: flex;flex-direction: unset;float: unset;height: auto;justify-content: unset;line-height: 1.5em;overflow: unset;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">
+<span style="display: none;"></span><span style="font-size: 22px;color: rgb(89, 89, 89);border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: block;font-weight: bold;flex-direction: unset;float: unset;height: auto;justify-content: unset;overflow: unset;text-indent: 0em;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">配置nginx日志</span><span style="display: none;"></span><br />
+</h2>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">Nginx日志也是很重要的一个内容，在我们请求资源出现问题时，要排查请求的资源是否到达Nginx，而且请求日志可以记录很多有用的信息。</p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">   log_format  gzip  <span style="color: #98c379;line-height: 26px;">'$remote_addr - $remote_user [$time_local]  '</span><br>   : <span style="color: #98c379;line-height: 26px;">'"$request" $status $bytes_sent '</span><br>   : <span style="color: #98c379;line-height: 26px;">'"$http_referer" "$http_user_agent" "$gzip_ratio"'</span>;<br><br>   access_log  /var/logs/nginx-access.log  gzip  buffer=32k;<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">nginx日志主要涉及<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>access_log</code>，<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>log_format</code></p>
+<ul data-tool="mdnice编辑器" style="margin-top: 8px;margin-bottom: 8px;padding-left: 25px;" class="list-paddingleft-1">
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;"><code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>log_format</code>: 日志格式，通过nginx内置的变量来读取和排列，通常默认即可</section>
+</li>
+<li>
+<section style="margin-top: 5px;margin-bottom: 5px;color: rgb(1, 1, 1);line-height: 1.8em;letter-spacing: 0em;"><code style='background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>access_log</code>: 日志输出的地址、是否压缩、buffer是否当日志大于32k后吸入磁盘</section>
+</li>
+</ul>
+<h2 data-tool="mdnice编辑器" style="border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);margin-top: 30px;margin-bottom: 15px;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: flex;flex-direction: unset;float: unset;height: auto;justify-content: unset;line-height: 1.5em;overflow: unset;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">
+<span style="display: none;"></span><span style="font-size: 22px;color: rgb(89, 89, 89);border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: block;font-weight: bold;flex-direction: unset;float: unset;height: auto;justify-content: unset;overflow: unset;text-indent: 0em;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">其他常用配置</span><span style="display: none;"></span><br />
+</h2>
+<h3 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 20px;color: rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">1、配置Gzip压缩</span><span style="display: none;"></span><br />
+</h3>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;"><strong style="color: rgb(71, 193, 168);background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;width: auto;height: auto;border-style: none;border-width: 3px;border-color: rgba(0, 0, 0, 0.4);border-radius: 0px;">作为前端性能优化的一种方式，Gzip是简单且有效的，尽管目前前端对于静态资源会进行压缩，但Gzip依然可以在网络传输过程中对文件进行压缩</strong></p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">下面这些字段可以放在<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>http、server、location</code>指令模块</p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    http {<br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 开启关闭</span><br>        gzip on;<br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 压缩的文件类型</span><br>        gzip_types text/plain text/css application/javascript;<br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 过小的文件没必要压缩</span><br>        gzip_min_length 1000; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 单位Byte</span><br>        gzip_comp_level 5; <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 压缩比，默认1，范围时1-9，值越大压缩比最大，但处理最慢，所以设置5左右比较合理。</span><br>    }<br></code></pre>
+<h3 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 20px;color: rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">2、配置请求头</span><span style="display: none;"></span><br />
+</h3>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;"><strong style="color: rgb(71, 193, 168);background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;width: auto;height: auto;border-style: none;border-width: 3px;border-color: rgba(0, 0, 0, 0.4);border-radius: 0px;">允许客户端请求在http请求中添加以下划线格式命名的参数</strong></p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">该字段可以放在<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>http</code>指令模块</p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">    http {<br>        underscores_in_headers on;<br>    }<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;"><strong style="color: rgb(71, 193, 168);background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;width: auto;height: auto;border-style: none;border-width: 3px;border-color: rgba(0, 0, 0, 0.4);border-radius: 0px;">允许客户端上传文件最大不超过1M，在开发上传接口时一定要注意，否则导致上传失败</strong></p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">该字段可以放在<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>http、server、location</code>指令模块<br />
+http {<br />
+client_max_body_size 1m;<br />
+}</p>
+<h3 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 20px;color: rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">3、浏览器缓存配置</span><span style="display: none;"></span><br />
+</h3>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;"><strong style="color: rgb(71, 193, 168);background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;width: auto;height: auto;border-style: none;border-width: 3px;border-color: rgba(0, 0, 0, 0.4);border-radius: 0px;">缓存也是前端优化的一个重点，合理的缓存可以提高用户访问速度</strong></p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">该字段可以放在<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>http、server、location</code>指令模块</p>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">配置浏览器缓存的有三个地方</p>
+<h4 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 18px;line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">1）后端服务，配置请求头</span><span style="display: none;"></span><br />
+</h4>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">后端根据语言不同，配置关键字段即可</p>
+<h4 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 18px;line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">2）代理服务器（Nginx）配置缓存请求头</span><span style="display: none;"></span><br />
+</h4>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">location /static {<br> # /static匹配到的资源有效期设置为1d;<br> expires 1d;  <br> # /设置资源有效期为一周;<br> # expires max-age=604800; <br> <br> # 设置浏览器可以被缓存，设置7天后资源过期<br> add_header Cache-Control "public, max-age=604800";<br> # 阻止浏览器缓存动态内容<br> # add_header Cache-Control "no-cache, no-store, must-revalidate";<br> # 禁用浏览器缓存<br> # add_header Cache-Control "no-store, private, max-age=0";<br>}<br></code></pre>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">我们发现响应头的过期时间更新了</p>
+<h4 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 18px;line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">3）在前端资源中通过meta声明缓存信息</span><span style="display: none;"></span><br />
+</h4>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;"><meta style="color: #98c379;line-height: 26px;">"Cache-Control" content=<span style="color: #98c379;line-height: 26px;">"no-cache, no-store, must-revalidate"</span>&gt;<br><meta style="color: #98c379;line-height: 26px;">"Expires" content=<span style="color: #98c379;line-height: 26px;">"0"</span>&gt;<br></code></pre>
+<h3 data-tool="mdnice编辑器" style="margin-top: 30px;margin-bottom: 15px;">
+<span style="display: none;"></span><span style="font-size: 20px;color: rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;font-weight: bold;display: block;">4、跨域处理</span><span style="display: none;"></span><br />
+</h3>
+<blockquote data-tool="mdnice编辑器" style="margin-top: 20px;margin-bottom: 20px;padding: 10px 10px 10px 20px;border-style: none;border-top-width: 3px;border-bottom-width: 3px;border-right-width: 3px;border-color: rgba(0, 0, 0, 0.4);border-radius: 0px;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(0, 0, 0, 0.05);width: auto;height: auto;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px;overflow: auto;"><p>
+<span style="display: block;color: rgb(85, 85, 85);font-size: 28px;line-height: 1.5em;letter-spacing: 0em;font-weight: bold;">“</span></p>
+<p style="text-indent: 0em;padding-top: 8px;padding-bottom: 8px;color: rgb(0, 0, 0);font-size: 16px;line-height: 1.8em;letter-spacing: 0em;">通过反向代理，已经处理了请求域名和端口不一致的跨域问题，但有局限性。Nginx有专门方法配置请求资源的跨域</p>
+</blockquote>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">该字段可以放在<code style='color: rgb(71, 193, 168);font-size: 14px;line-height: 1.8em;letter-spacing: 0em;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(27, 31, 35, 0.05);width: auto;height: auto;margin-left: 2px;margin-right: 2px;padding: 2px 4px;border-style: none;border-width: 3px;border-color: rgb(0, 0, 0) rgba(0, 0, 0, 0.4) rgba(0, 0, 0, 0.4);border-radius: 4px;font-family: "Operator Mono", Consolas, Monaco, Menlo, monospace;word-break: break-all;'>server、location</code>指令模块，通过配置头部字段，做跨域处理</p>
+<pre data-tool="mdnice编辑器" style="border-radius: 5px;box-shadow: rgba(0, 0, 0, 0.55) 0px 2px 10px;margin-top: 10px;margin-bottom: 10px;"><span style='display: block;background: url("https://mmbiz.qpic.cn/mmbiz_svg/8h9QXaJ70ibeYKgibZGYic9vpibh93YOnHqXGt2fj8TFdyTUWItJxAodicicw5IPw9haHxs8gkaWia9RpWGCJ0KsAEmkBddlekTQFZl/640?wx_fmt=svg&amp;from=appmsg") 10px 10px / 40px no-repeat rgb(40, 44, 52);height: 30px;width: 100%;margin-bottom: -7px;border-radius: 5px;'></span><code style="overflow-x: auto;padding: 16px;color: #abb2bf;padding-top: 15px;background: #282c34;border-radius: 5px;display: -webkit-box;font-family: Consolas, Monaco, Menlo, monospace;font-size: 12px;">server {<br><br>    location / {<br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 允许所有来源的跨域请求</span><br>        add_header Access-Control-Allow-Origin *;<br>        <br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 允许特定的HTTP方法（GET、POST等）</span><br>        add_header Access-Control-Allow-Methods <span style="color: #98c379;line-height: 26px;">"GET, POST, OPTIONS, PUT, DELETE"</span>;<br><br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 允许特定的HTTP请求头字段</span><br>        add_header Access-Control-Allow-Headers <span style="color: #98c379;line-height: 26px;">"Origin, X-Requested-With, Content-Type, Accept"</span>;<br><br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 响应预检请求的最大时间</span><br>        add_header Access-Control-Max-Age 3600;<br><br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 允许携带身份凭证（如Cookie）</span><br>        add_header Access-Control-Allow-Credentials <span style="color: #56b6c2;line-height: 26px;">true</span>;<br><br>        <span style="color: #5c6370;font-style: italic;line-height: 26px;"># 处理 OPTIONS 预检请求</span><br>        <span style="color: #c678dd;line-height: 26px;">if</span> (<span style="color: #d19a66;line-height: 26px;">$request_method</span> = <span style="color: #98c379;line-height: 26px;">'OPTIONS'</span>) {<br>            add_header Access-Control-Allow-Methods <span style="color: #98c379;line-height: 26px;">"GET, POST, OPTIONS, PUT, DELETE"</span>;<br>            add_header Access-Control-Allow-Headers <span style="color: #98c379;line-height: 26px;">"Origin, X-Requested-With, Content-Type, Accept"</span>;<br>            add_header Access-Control-Max-Age 3600;<br>            add_header Access-Control-Allow-Credentials <span style="color: #56b6c2;line-height: 26px;">true</span>;<br>            add_header Content-Length 0;<br>            add_header Content-Type text/plain;<br>            <span style="color: #e6c07b;line-height: 26px;">return</span> 204;<br>        }<br>    }<br>}<br></code></pre>
+<blockquote data-tool="mdnice编辑器" style="margin-top: 20px;margin-bottom: 20px;padding: 10px 10px 10px 20px;border-style: none;border-top-width: 3px;border-bottom-width: 3px;border-right-width: 3px;border-color: rgba(0, 0, 0, 0.4);border-radius: 0px;background: none 0% 0% / auto no-repeat scroll padding-box border-box rgba(0, 0, 0, 0.05);width: auto;height: auto;box-shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px;overflow: auto;"><p>
+<span style="display: block;color: rgb(85, 85, 85);font-size: 28px;line-height: 1.5em;letter-spacing: 0em;font-weight: bold;">“</span></p>
+<p style="text-indent: 0em;padding-top: 8px;padding-bottom: 8px;color: rgb(0, 0, 0);font-size: 16px;line-height: 1.8em;letter-spacing: 0em;">作者：UCloud云通信技术团队</p>
+</blockquote>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">原文链接：https://juejin.cn/post/7295926959842033699</p>
+<h2 data-tool="mdnice编辑器" style="border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);margin-top: 30px;margin-bottom: 15px;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: flex;flex-direction: unset;float: unset;height: auto;justify-content: unset;line-height: 1.5em;overflow: unset;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">
+<span style="display: none;"></span><span style="font-size: 22px;color: rgb(89, 89, 89);border-color: rgb(0, 0, 0) rgb(0, 0, 0) rgb(89, 89, 89);line-height: 1.5em;letter-spacing: 0em;align-items: unset;background-attachment: scroll;background-clip: border-box;background-image: none;background-origin: padding-box;background-position: 0% 0%;background-repeat: no-repeat;background-size: auto;border-style: none none solid;border-width: 1px 1px 2px;border-radius: 0px;box-shadow: none;display: block;font-weight: bold;flex-direction: unset;float: unset;height: auto;justify-content: unset;overflow: unset;text-indent: 0em;text-shadow: none;transform: none;width: auto;-webkit-box-reflect: unset;">最后</span><span style="display: none;"></span><br />
+</h2>
+<p data-tool="mdnice编辑器" style="color: rgb(89, 89, 89);line-height: 1.8em;letter-spacing: 0em;text-indent: 0em;padding-top: 8px;padding-bottom: 8px;">以上就是Nginx常用的内容，也是我在工作中遇到的经常遇到的一些情况，足够来部署前端服务了。如果你工作中有什么关于nginx的问题可以留言，如果没有可以点个赞👍。</p>
+</section>
+<p style="text-align: center;"></p>
+</section>
+<p style="display: none;"><mp-style-type data-value="3"></mp-style-type></p>
+<p><a href="https://mp.weixin.qq.com/s/Xy9roEYKwSkROtA86iGkhQ">阅读原文<a/></p>
+            </div>
+
+                    <!-- 底部元信息 -->
+        <div class="post-footmeta mb-5">
+            <div class="row d-flex align-items-center">
+                <div class="col-md-6 col-12">
+                    <div class="post-share justify-content-sm-start mb-3 mb-sm-0">
+                        <div class="post-btnmeta">
+                            <span class="post-like anim cursor-pointer" :class="postMeta.postLike_on ? 'text-auto' : ''" @click="_setlike"><i class="cxicon cxicon-zan-black"></i> <em style="font-style: normal" x-text="postMeta.postLike" x-show="postMeta.postLike !== 0"></em></span>
+                        </div>
+                        <i class="cxline-1"></i>
+                        <ul class="social-icons" x-data="{'postThumb':'/wp-content/uploads/2024/10/frc-a06d14564918d704f5b167ee920f2063.png','postLink' : window.location.href, 'postTitle' : document.title}">
+                            <li class="list-inline-item">
+                                <a href="javascript:;" title="分享到微信" rel="noreferrer noopener nofollow" x-bind="weixinLink"><i class="cxicon cxicon-weixin"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript:;" title="分享到微博" rel="noreferrer noopener nofollow" x-bind="weiboLink"><i class="cxicon cxicon-weibo"></i></a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="javascript:;" title="分享到QQ" rel="noreferrer noopener nofollow" x-bind="qqLink"><i class="cxicon cxicon-qq"></i></a>
+                            </li>
+                        </ul>
+                                <i class="cxline-1"></i>
+        <div class="post-btnmeta ttop-1">
+            <span class="post-collect fs-7 anim py-1 cursor-pointer" :class="postMeta.postCollect_on ? 'text-auto' : ''" @click="_setCollect"><i class="cxicon cxicon-collect-black me-1" style="--scale:1.3"></i><span x-text="postMeta.postCollect_on ? '已收藏' : '收藏'"></span></span>
+        </div>
+                            </div>
+                </div>
+                <div class="col-md-6 col-12 text-center text-md-end">
+                    <div class="tags">
+                        <a href="../tag/nginx/index.html" rel="tag">#nginx</a>                    </div>
+                </div>
+            </div>
+        </div>
+                <div class="about-author p-4 mb-5 flex-sm-row">
+            <div class="thumb"><a class="author" href="../author/yowe/index.html" title="哟喂"><figure class="figure-avatar userid-1"><img alt='' src='../wp-content/themes/meteorpro/assets/images/lazy.png' data-src='http://yowe.cc/wp-content/uploads/userfigure/avatar-yowe.webp?v=1728971186' srcset='../wp-content/uploads/userfigure/avatar-yowe.webp%3Fv=1728971186 2x' class='lozad avatar avatar-100 photo avatar-default' height='100' width='100' decoding='async'/></figure></a></div>            <div class="details ps-sm-4 mt-3 mt-sm-0 text-sm-start">
+                <div class="name fw-bold mb-2 fs-4"><a href="../author/yowe/index.html" title="文章作者 哟喂" rel="author">哟喂</a></div>
+                <p>为您推荐最优质的软件系统和最专业的技术服务</p>
+                            </div>
+        </div>
+                <div class="row nextprev-post-wrapper mb-5 wht-ade8">
+            <div class="col-md-6 col-12 mb-4 mb-sm-0">
+                <div class="nextprev-post prev">
+                    <span class="nextprev-text fw-semibold fs-7 opacity-75"> 上一篇</span>
+                    <h5 class="post-title fs-5 lh-base">
+                        <a href="../高效的微信数据分析工具-wx-dump-4j/index.html" rel="prev">高效的微信数据分析工具——wx-dump-4j🤖</a>                    </h5>
+                </div>
+            </div>
+            <div class="col-md-6 col-12">
+                <div class="nextprev-post next text-sm-end">
+                    <span class="nextprev-text fw-semibold fs-7 opacity-75">下一篇</span>
+                    <h5 class="post-title fs-5 lh-base">
+                        <a href="../mysql-优化都有哪些-技巧？/index.html" rel="next">MySQL 优化都有哪些 技巧？</a>                    </h5>
+                </div>
+            </div>
+        </div>
+                <div class="mso nobg" x-data="xgPostdata">
+            <div class="module-tit item-center noborder">
+                <h3 style="font-size:1rem"><i class="cxline"></i>延伸阅读:</h3>
+                <p></p>
+                <div class="more-sort">
+                    <button type="button" class="btn btn-xsm btn-sort lh-1 opacity-75" :class="{'active':xgpostType == 'hot'}" @click="xgPostrand( 'hot' )">热度</button>  
+                    <i class="cxline-1 mx-1"></i>
+                    <button type="button" class="btn btn-xsm btn-sort lh-1 opacity-75" :class="{'active':xgpostType == 'new'}" @click="xgPostrand( 'new' )">时效</button>
+                </div>
+            </div>
+            <div class="module-content jsminHeight">
+                <div class="hotpl w-100" x-ref="xgpostHot" :class="{'active':xgpostType == 'hot'}">
+                    <div class="nonebox py-5"><div class="iconsvg"></div><p>暂无内容!</p></div>                </div>
+                <div class="newpl w-100" x-ref="xgpostNew" :class="{'active':xgpostType == 'new'}">
+                    <div class="d-flex justify-content-center mt-5 opacity-50" style="min-height: 300px;">
+                        <div class="spinner-border text-danger sbw-2" role="status"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+                </article>
+                            </div>
+                </div>
+            </div>
+            
+            <div class="col-right" id="sidebar">
+    <div class="rowright sidebar-sticky">
+        <aside class="side-area pb-3">
+            <div class="widget widget_block">
+<div class="block-introduction"><div style="background:linear-gradient(120deg, #e0c3fc 0%, #8ec5fc 100%);color:#fff" class="wp-block-meteor-introduction-block rounded py-2 px-3">
+<p class="has-text-align-center">开源大马,开源技术分享交流,为您推荐最优质的软件系统和最专业的技术支持</p>
+</div></div>
+</div><div class="widget widget_block"><div class="wp-widget-group__inner-blocks"></div></div><div class="widget widget_block"><h4 class="widgettitle mb-3 fs-5">热门分类<span class="hovershow text-auto anim ms-1"><i class="cxicon cxicon-daoxiang"></i></span></h4><div class="wp-widget-group__inner-blocks"><div class="block-termcloud d-flex flex-wrap fs-7 oneColor wp-block-meteor-tremcloud"><div class="cloud-item anim"><a href="../category/人工智能/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">人工智能</span></a></div><div class="cloud-item anim"><a href="../category/企业通用/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">企业通用</span></a></div><div class="cloud-item anim"><a href="../category/健康医疗/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">健康医疗</span></a></div><div class="cloud-item anim"><a href="../category/开发运维/后端开发/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">后端开发</span></a></div><div class="cloud-item anim"><a href="../category/多媒体/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">多媒体</span></a></div><div class="cloud-item anim"><a href="../category/开发运维/客户端/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">客户端</span></a></div><div class="cloud-item anim"><a href="../category/工具软件/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">工具软件</span></a></div><div class="cloud-item anim"><a href="../category/开发运维/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">开发运维</span></a></div><div class="cloud-item anim"><a href="../category/科技资讯/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">科技资讯</span></a></div><div class="cloud-item anim"><a href="../category/人工智能/自然语言处理/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox"><i class="cxicon cxicon-fenlei1 me-1"></i></span><span class="name opacity-75">自然语言处理</span></a></div></div></div></div><div class="widget widget_block"><h4 class="widgettitle mb-3 fs-5">图片广告<span class="hovershow text-auto anim ms-1"><i class="cxicon cxicon-daoxiang"></i></span></h4><div class="wp-widget-group__inner-blocks">
+<figure class="wp-block-image size-full bordered"><img loading="lazy" decoding="async" width="800" height="498" src="../wp-content/uploads/2024/10/1630402246_829231.jpg" alt="" class="wp-image-819"/></figure>
+</div></div><div class="widget widget_block"><h4 class="widgettitle mb-3 fs-5">最新文章<span class="hovershow text-auto anim ms-1"><i class="cxicon cxicon-daoxiang"></i></span></h4><div class="wp-widget-group__inner-blocks">
+<div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained"><ul class="wp-block-latest-posts__list wp-block-latest-posts"><li><a class="wp-block-latest-posts__post-title" href="../这些良好的嵌入式软件编程习惯，建议掌握！/index.html">这些良好的嵌入式软件编程习惯，建议掌握！</a></li>
+<li><a class="wp-block-latest-posts__post-title" href="../一文看懂llm推理，ucl重磅解读openai-ο1的相关方法/index.html">一文看懂LLM推理，UCL重磅解读OpenAI ο1的相关方法</a></li>
+<li><a class="wp-block-latest-posts__post-title" href="../gradio-5-简化机器学习模型演示的工具-🤖/index.html">Gradio 5 ——简化机器学习模型演示的工具 🤖</a></li>
+<li><a class="wp-block-latest-posts__post-title" href="../跨平台远程桌面解决方案-rustdesk/index.html">跨平台远程桌面解决方案——RustDesk🤖</a></li>
+<li><a class="wp-block-latest-posts__post-title" href="../跨平台高效的本地文件传输工具-localsend/index.html">跨平台高效的本地文件传输工具——LocalSend🤖</a></li>
+</ul></div></div>
+</div></div><div class="widget widget_block"><h4 class="widgettitle mb-3 fs-5">图册展示<span class="hovershow text-auto anim ms-1"><i class="cxicon cxicon-daoxiang"></i></span></h4><div class="wp-widget-group__inner-blocks">
+<div class="wp-block-group"><div class="wp-block-group__inner-container is-layout-constrained wp-block-group-is-layout-constrained">
+<figure class="wp-block-gallery has-nested-images columns-default is-cropped wp-block-gallery-2 is-layout-flex wp-block-gallery-is-layout-flex">
+<figure class="wp-block-image size-large"><img decoding="async" src="https://file.xhtheme.cn/xhimages/xhtheme-demo-27.jpeg" alt="" class="wp-image-63"/></figure>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" src="https://file.xhtheme.cn/xhimages/xhtheme-demo-38.webp" alt="" class="wp-image-78"/></figure>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" src="https://file.xhtheme.cn/xhimages/xhtheme-demo-39.webp" alt="" class="wp-image-60"/></figure>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" src="https://file.xhtheme.cn/xhimages/xhtheme-demo-41.webp" alt="" class="wp-image-57"/></figure>
+
+
+
+<figure class="wp-block-image size-large"><img decoding="async" src="https://file.xhtheme.cn/xhimages/xhtheme-demo-25.jpeg" alt="" class="wp-image-40"/></figure>
+</figure>
+</div></div>
+</div></div><div class="widget widget_block"><h4 class="widgettitle mb-3 fs-5">标签云<span class="hovershow text-auto anim ms-1"><i class="cxicon cxicon-daoxiang"></i></span></h4><div class="wp-widget-group__inner-blocks"><div class="block-termcloud d-flex flex-wrap fs-7 oneColor wp-block-meteor-tremcloud"><div class="cloud-item anim"><a href="../tag/任务管理/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">任务管理</span></a></div><div class="cloud-item anim"><a href="../tag/员工管理/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">员工管理</span></a></div><div class="cloud-item anim"><a href="../tag/在线医生/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">在线医生</span></a></div><div class="cloud-item anim"><a href="../tag/嵌入式/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">嵌入式</span></a></div><div class="cloud-item anim"><a href="../tag/智慧家居/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">智慧家居</span></a></div><div class="cloud-item anim"><a href="../tag/物业管理/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">物业管理</span></a></div><div class="cloud-item anim"><a href="../tag/物联网/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">物联网</span></a></div><div class="cloud-item anim"><a href="../tag/监控系统/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">监控系统</span></a></div><div class="cloud-item anim"><a href="../tag/知识图谱/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">知识图谱</span></a></div><div class="cloud-item anim"><a href="../tag/语音转换/index.html" class="me-3 mb-3 py-2 px-3 rounded-pill"><span class="iconbox" style="margin-left:-5px"><i class="cxicon cxicon-hashjinghao me-1" style="--scale:1;font-style: oblique;"></i></span><span class="name opacity-75">语音转换</span></a></div></div></div></div>        </aside>
+    </div>
+</div>        </div>
+    </div>
+</section>
+<!-- 3.end --></main><!-- main.end -->
+
+<footer class="footer-s1">
+    <div class="linebox bg-auto"></div>
+    <div class="foottop">
+        <div class="container-xl">
+            <div class="footmain-box">
+                <div class="aboutus_link"><a href="https://0060.my" target="_blank">0060</a><a href="https://www.icnma.com/" target="_blank">美熙科技说</a><a href="https://ambertaste.com/" target="_blank">安泊尔调料</a><a href="../about.html">关于我们</a></div><div class="footer-desc">免责声明：本网站部分内容由用户自行上传，如权利人发现存在误传其作品情形，请及时与本站联系。</div><div class="foot-copyright">哟喂 © 2024. All Rights Reserved.</div>            </div>
+        </div>
+    </div>
+</footer>
+<!-- 弹出层代码 -->
+<div class="popbg-box anim" :class="{visible: popData.bgShow,blackcolor: popData.bgBlack }" @click="_bgclose('bg')"></div>
+<div class="emon rounded" :class="{visible: popData.Emon,loading: popData.loadclass,mbemon: popData.mbemon}" :style="popData.popMwidth ? '--maxwidth:'+popData.popMwidth : ''">
+    <div class="emon-close" @click="_bgclose('btn')" _widese="574050"><i class="cxicon cxicon-error" style="--scale:.85"></i></div>
+    <div class="emon-title" x-show="popData.title" x-html="popData.title"></div>
+    <div class="emon-content" x-html="popData.content"></div>
+</div>
+
+<!-- 弹窗部分结束 -->
+<div class="search-popup anim" :class="{'visible': searchData.Popup}">
+    <div class="search-content anim" :class="{'top-lg-40':searchData.Inputtop}">
+        <div class="search-form-box">
+            <form class="d-flex search-form" method="get" @submit.prevent="searchData.searchFormSubmit($data)" action="../index.html">
+                <div class="d-flex w-100 justify-content-between align-items-center position-relative">
+                    <div class="search-inputbox flex-grow-1">
+                        <input class="form-control search-input py-2 py-lg-3 px-4 border-2 anim" @input.debounce.1000ms="searchData.searchFormSubmit($data)" x-model="searchData.formData.word" autocomplete="off" placeholder="搜索并按回车键..." type="text" name="s" aria-label="搜索">
+                    </div>
+                    <botton type="submit" class="submitbox position-absolute top-0 end-0 d-flex align-items-center px-4 h-100 opacity-50">
+                        <i class="cxicon cxicon-search" :class="{'d-none':searchData.loadIng}"></i>
+                        <span class="spinner-border spinner-border-sm spinner-b1" :class="{'d-none':!searchData.loadIng}"></span>
+                    </botton>
+                </div>
+            </form>
+        </div>   
+        <ul class="searchList anim pt-4" x-html="searchData.postList" x-show="!searchData.Inputtop && searchData.formData.word" x-transition :class="{'opacity-25':searchData.loadIng}"></ul>          
+    </div>
+</div>
+<!-- .end -->
+</div>
+<!--.sit-wrapper-->
+         <template x-ref="loginformtpl">
+            <div class="logintemplate" x-data="extendLoginData()">
+                <div class="position-relative z-1">
+                    <div class="head-login w-100 px-3 d-none" style="margin-top:10px;min-height:1px">
+                        <p class="fs-7 mb-0 text-center"><span class="sticky-color" style="--cbg-lightgradient:var(--cx-gradient-purple)"></span></p>
+                    </div>                  
+                    <div class="loginnone">暂无可用登录表单，请到后台完成配置！</div><div class="tip fs-6 text-center opacity-50 pt-2">用户成功登录即表示同意《<a href="index.html#">用户协议</a>》《<a href="index.html#">隐私政策</a>》！</div>              
+                </div>                
+            </div>
+        </template> 
+        <script>
+function apoyl_weixinshare_getMeta(){
+	var obj=document.getElementsByTagName('meta');
+	var desc='了解一点简单的Nginx知识“本节内容作为基础知识，如果熟悉Nginx可以略过，如果不熟悉可以实际操作一下。现在服务器安装Nginx很简单，一般只需要两行命令即可，安装完成后，启动服务。   &amp;hellip;';
+	for(i in obj){
+		if(typeof obj[i].name=='undefined')
+			continue;
+		if(obj[i].name.toLowerCase()=='description'&&obj[i].content.trim().length>6){		
+			desc=obj[i].content;
+			break;
+		}
+	}
+	return desc;
+}
+</script>
+<script>
+wx.config({
+	     debug: false, 
+    	appId: 'wx9d120bedb665bdc1',
+	timestamp: '1729582687',
+	nonceStr: 'HCu9v1ujx8Hku0MK',
+	signature: '48eaa8063aee4791c18f4bbbd837168fc3df292b',
+	jsApiList: [
+   'updateTimelineShareData',
+       'updateAppMessageShareData'
+    ]
+});
+</script>
+
+<script>
+wx.ready(function () {
+	  var apoyl_weixinshare_title=document.title;
+	  var apoyl_weixinshare_link=window.location.href;
+	  var apoyl_weixinshare_desc=apoyl_weixinshare_getMeta();
+	  
+		  wx.updateTimelineShareData({
+		    title: apoyl_weixinshare_title, 
+		    link: apoyl_weixinshare_link, 
+		    imgUrl:'https://yowe.cc/wp-content/plugins/apoyl-weixinshare/public/img/logo.png', 
+			success: function () {
+				
+			}
+		});
+
+    
+		  wx.updateAppMessageShareData({
+		    title: apoyl_weixinshare_title, 
+		    desc: apoyl_weixinshare_desc, 
+		    link: apoyl_weixinshare_link, 
+		    imgUrl:'https://yowe.cc/wp-content/plugins/apoyl-weixinshare/public/img/logo.png', 
+			success: function () {
+	
+			}
+		});
+    });
+</script>
+<style id='core-block-supports-inline-css' type='text/css'>
+.wp-block-gallery.wp-block-gallery-1{--wp--style--unstable-gallery-gap:var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );gap:var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );}.wp-block-gallery.wp-block-gallery-2{--wp--style--unstable-gallery-gap:var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );gap:var( --wp--style--gallery-gap-default, var( --gallery-block--gutter-size, var( --wp--style--block-gap, 0.5em ) ) );}
+</style>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/meteor.js%3Fver=2.2.1" id="meteor-main-js"></script>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/plugins.min.js%3Fver=2.2.1" id="meteor-plugins-js"></script>
+<script type="text/javascript" src="../wp-content/uploads/meteor-extend/userlogin-extend/assets/js/login.js%3Fver=1.0" id="kz-userlogin-js"></script>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/swiper-bundle.min.js%3Fver=2.2.1" id="meteor-swiper-js"></script>
+<script type="text/javascript" id="meteor-alpine-js-extra">
+/* <![CDATA[ */
+var cxjs = {"homeurl":"https:\/\/yowe.cc","jsonapi":"https:\/\/yowe.cc\/wp-json\/cxv1\/","themedir":"https:\/\/yowe.cc\/wp-content\/themes\/meteorpro","ajaxurl":"https:\/\/yowe.cc\/wp-admin\/admin-ajax.php","endorseMsg":"\u60a8\u5df2\u7ecf\u8868\u8fc7\u6001\u4e86\uff01","popMbemon":"","postId":"892"};
+/* ]]> */
+</script>
+<script type="text/javascript" src="../wp-content/themes/meteorpro/assets/js/alpine.min.js%3Fver=3.13.10" id="meteor-alpine-js"></script>
+</body>
+
+</html>
