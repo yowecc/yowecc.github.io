@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?><?xml-stylesheet type='text/xsl' href='https://yowe.cc/wp-content/plugins/google-sitemap-generator/sitemap.xsl'?><!-- sitemap-generator-url='http://www.arnebrachhold.de' sitemap-generator-version='4.1.21' -->
-<!-- generated-on='2024-10-21 pm1:56' -->
+<!-- generated-on='2024-10-22 am2:58' -->
 <urlset xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xsi:schemaLocation='http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd' xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'>	<url>
 		<loc>https://yowe.cc/tag/ai%e5%ad%97%e5%b9%95%e7%bb%84/</loc>
 		<lastmod>2024-10-16T14:22:31+00:00</lastmod>
@@ -21,6 +21,12 @@
 	<url>
 		<loc>https://yowe.cc/tag/macbook/</loc>
 		<lastmod>2024-10-15T14:34:38+00:00</lastmod>
+		<changefreq>always</changefreq>
+		<priority>0.3</priority>
+	</url>
+	<url>
+		<loc>https://yowe.cc/tag/mes/</loc>
+		<lastmod>2024-10-22T01:36:42+00:00</lastmod>
 		<changefreq>always</changefreq>
 		<priority>0.3</priority>
 	</url>
@@ -75,6 +81,12 @@
 	<url>
 		<loc>https://yowe.cc/tag/%e5%9b%be%e7%89%87%e8%af%86%e5%88%ab/</loc>
 		<lastmod>2024-10-15T14:34:20+00:00</lastmod>
+		<changefreq>always</changefreq>
+		<priority>0.3</priority>
+	</url>
+	<url>
+		<loc>https://yowe.cc/tag/%e5%9c%a8%e7%ba%bf%e5%8c%bb%e7%94%9f/</loc>
+		<lastmod>2024-10-22T01:09:30+00:00</lastmod>
 		<changefreq>always</changefreq>
 		<priority>0.3</priority>
 	</url>
@@ -174,4 +186,4 @@
 		<changefreq>always</changefreq>
 		<priority>0.3</priority>
 	</url>
-</urlset><!-- Request ID: b09e8406243e92849d5eba42e92a18b5; Queries for sitemap: 31; Total queries: 63; Seconds: 0.01; Memory for sitemap: 1KB; Total memory: 6MB -->
+</urlset><!-- Request ID: d21731ad671c78cf28812f8ebb16ebef; Queries for sitemap: 33; Total queries: 65; Seconds: 0.01; Memory for sitemap: 1KB; Total memory: 6MB -->
